@@ -782,6 +782,31 @@
       opacity: .5;
     }
 
+    /* true / false special layout */
+    .answers-grid.answers-tf {
+      grid-template-columns: 1fr 1fr;
+    }
+    .answers-grid.answers-tf .ans-btn {
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      padding: 1.4rem 1rem;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      gap: .35rem;
+    }
+    .answers-grid.answers-tf .ans-btn .ans-letter { display: none; }
+    .ans-btn.tf-tiesa {
+      border-color: rgba(0,200,150,.5);
+      background: rgba(0,200,150,.1);
+    }
+    .ans-btn.tf-melas {
+      border-color: rgba(255,58,92,.5);
+      background: rgba(255,58,92,.1);
+    }
+    .ans-btn.tf-tiesa .tf-icon::before { content: '✅'; font-size: 1.8rem; display: block; margin-bottom: .2rem; }
+    .ans-btn.tf-melas .tf-icon::before { content: '❌'; font-size: 1.8rem; display: block; margin-bottom: .2rem; }
+
     /* ── MOBILE ─────────────────────────────────────── */
     @media (max-width: 580px) {
       .logo h1 { font-size: 2.1rem; }
@@ -1243,14 +1268,21 @@ function loadQARound() {
   el('q-label').textContent = `Klausimas ${G.songIdx % G.questions.length + 1}`;
   el('q-text').textContent  = q.question;
 
-  const letters = ['A', 'B', 'C', 'D'];
-  const grid    = el('answers-grid');
-  grid.className = `answers-grid answers-${q.answers.length}`;
-  grid.innerHTML = q.answers.map((a, i) =>
-    `<div class="ans-btn" id="ans-${i}">
-      <span class="ans-letter">${letters[i]}</span>${esc(a)}
-    </div>`
-  ).join('');
+  const grid = el('answers-grid');
+  if (tour && tour.type === 'truefalse') {
+    grid.className = 'answers-grid answers-tf';
+    grid.innerHTML =
+      `<div class="ans-btn tf-tiesa" id="ans-0"><span class="tf-icon"></span>Tiesa</div>
+       <div class="ans-btn tf-melas"  id="ans-1"><span class="tf-icon"></span>Melas</div>`;
+  } else {
+    const letters = ['A', 'B', 'C', 'D'];
+    grid.className = `answers-grid answers-${q.answers.length}`;
+    grid.innerHTML = q.answers.map((a, i) =>
+      `<div class="ans-btn" id="ans-${i}">
+        <span class="ans-letter">${letters[i]}</span>${esc(a)}
+      </div>`
+    ).join('');
+  }
 
   el('btn-reveal').textContent = '✅ Atskleisti atsakymą';
   setPhase('qa-question');
@@ -1258,15 +1290,27 @@ function loadQARound() {
 }
 
 function revealQAnswer() {
-  const q = G.questions[G.songIdx % G.questions.length];
-  const letters = ['A', 'B', 'C', 'D'];
-  q.answers.forEach((_, i) => {
+  const q    = G.questions[G.songIdx % G.questions.length];
+  const tour = G.allTours.find(t => t.id === G.tourId);
+  const isTF = tour && tour.type === 'truefalse';
+
+  const count = isTF ? 2 : q.answers.length;
+  for (let i = 0; i < count; i++) {
     const btn = el('ans-' + i);
-    if (i === q.correct) btn.classList.add('ans-correct');
-    else                  btn.classList.add('ans-wrong');
-  });
+    if (btn) {
+      if (i === q.correct) btn.classList.add('ans-correct');
+      else                  btn.classList.add('ans-wrong');
+    }
+  }
+
+  const correctLabel = isTF
+    ? (q.correct === 0 ? 'Tiesa ✅' : 'Melas ❌')
+    : `${['A','B','C','D'][q.correct]} — ${q.answers[q.correct]}`;
+
+  spawnFloaters(['✨','🎉','😮','🤯','😲'],['OMG','žinai mane!','tiksliai!','šokiruota','wow'], true);
+
   setPhase('judging');
-  setStatus(`✅ Teisingas atsakymas: ${letters[q.correct]} — ${esc(q.answers[q.correct])}`);
+  setStatus(`Teisingas atsakymas: ${correctLabel}`);
 }
 
 function replayClip() {

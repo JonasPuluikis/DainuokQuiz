@@ -29,5 +29,28 @@
         "correct": 1
       }
     ]
+  },
+  {
+    "id": "tiesaarmelas",
+    "name": "Tiesa ar Melas",
+    "emoji": "🤔",
+    "type": "truefalse",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Atsikeliu su vienu žadintuvu.",
+        "correct": 0
+      },
+      {
+        "id": 2,
+        "question": "Šie namai yra mano antri per visą gyvenimą.",
+        "correct": 1
+      },
+      {
+        "id": 3,
+        "question": "Kartą gyvenime dariausi abortą.",
+        "correct": 1
+      }
+    ]
   }
 ]
