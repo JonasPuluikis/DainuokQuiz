@@ -694,7 +694,7 @@ function revealAnswer() {
   el('lyrics-box').textContent     = song.answer.lyrics;
   el('lyrics-box').style.display   = '';
 
-  playSegment(vid, song.answer.startSeconds, song.answer.endSeconds, () => setPhase('judging'));
+  playSegment(vid, song.answer.startSeconds, song.answer.startSeconds + 7, () => setPhase('judging'));
 }
 
 function markAnswer(correct) {
