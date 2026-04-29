@@ -281,6 +281,41 @@
 
     .songs-note { text-align:center; font-size:.8rem; color:var(--muted); margin-top:.75rem; }
 
+    /* mode picker */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .6rem;
+    }
+    .mode-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .3rem;
+      padding: .9rem .5rem;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      background: rgba(18,18,42,.7);
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform .15s cubic-bezier(.34,1.56,.64,1), border-color .15s, box-shadow .15s;
+    }
+    .mode-btn .mode-icon { font-size: 1.9rem; }
+    .mode-btn:hover { transform: translateY(-3px) scale(1.03); }
+    .mode-btn.active-songs {
+      border-color: var(--purple);
+      background: rgba(131,56,236,.15);
+      box-shadow: 0 0 18px rgba(131,56,236,.4);
+    }
+    .mode-btn.active-qa {
+      border-color: var(--orange);
+      background: rgba(255,140,0,.15);
+      box-shadow: 0 0 18px rgba(255,140,0,.4);
+    }
+
     /* category picker */
     .cat-grid {
       display: grid;
@@ -632,6 +667,77 @@
       font-size: .76rem; font-weight: 600; color: var(--text);
     }
 
+    /* ── Q&A QUESTION CARD ─────────────────────────── */
+    .question-card {
+      background: linear-gradient(135deg, rgba(18,18,42,.95), rgba(26,26,56,.95));
+      border: 2px solid rgba(255,140,0,.5);
+      border-radius: var(--r);
+      padding: 1.5rem 1.6rem;
+      text-align: center;
+      display: none;
+      animation: fadeUp .35s ease both;
+      box-shadow: 0 0 24px rgba(255,140,0,.2);
+    }
+    .question-card .q-label {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--orange);
+      margin-bottom: .6rem;
+    }
+    .question-card .q-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.35rem;
+      line-height: 1.4;
+      color: #fff;
+    }
+    .answers-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .55rem;
+      display: none;
+    }
+    .ans-btn {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      padding: .8rem 1rem;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: rgba(18,18,42,.85);
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      text-align: left;
+      cursor: default;
+      transition: border-color .3s, background .3s, box-shadow .3s;
+    }
+    .ans-btn .ans-letter {
+      font-size: 1rem;
+      font-weight: 700;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(131,56,236,.35);
+      flex-shrink: 0;
+    }
+    .ans-btn.ans-correct {
+      border-color: var(--green);
+      background: rgba(0,200,150,.18);
+      box-shadow: 0 0 20px rgba(0,200,150,.4);
+      color: #fff;
+    }
+    .ans-btn.ans-correct .ans-letter { background: var(--green); }
+    .ans-btn.ans-wrong {
+      border-color: rgba(255,58,92,.3);
+      background: rgba(255,58,92,.06);
+      opacity: .5;
+    }
+
     /* ── MOBILE ─────────────────────────────────────── */
     @media (max-width: 580px) {
       .logo h1 { font-size: 2.1rem; }
@@ -673,6 +779,18 @@
     </div>
 
     <div class="card">
+      <div class="card-label">Žaidimo rūšis</div>
+      <div class="mode-grid">
+        <button class="mode-btn active-songs" id="mode-songs" onclick="selectMode('songs')">
+          <span class="mode-icon">🎵</span>Dainų viktorina
+        </button>
+        <button class="mode-btn" id="mode-qa" onclick="selectMode('qa')">
+          <span class="mode-icon">❓</span>Klausimai ir atsakymai
+        </button>
+      </div>
+    </div>
+
+    <div class="card" id="cat-card">
       <div class="card-label">Kategorija</div>
       <div class="cat-grid">
         <button class="cat-btn active-lt" id="cat-lt" onclick="selectCat('lt')">
@@ -733,6 +851,13 @@
       </div>
     </div>
 
+    <div class="question-card" id="question-card">
+      <div class="q-label">Klausimas</div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+
+    <div class="answers-grid" id="answers-grid"></div>
+
     <div class="timer-wrap" id="timer-wrap">
       <div class="timer-lbl">Laikas spėti!</div>
       <div class="timer-num t-go" id="timer-num">10</div>
@@ -788,28 +913,32 @@
    GAME STATE
 ══════════════════════════════════════════ */
 const G = {
-  allSongs:  [],
-  songs:     [],
-  players:   [],
-  playerIdx: 0,
-  songIdx:   0,
-  round:     1,
-  winScore:  5,
-  category:  'lt',
-  phase:     'idle',
-  timerVal:  10,
-  timerIv:   null,
-  confettiR: null,
+  allSongs:   [],
+  songs:      [],
+  allQs:      [],
+  questions:  [],
+  players:    [],
+  playerIdx:  0,
+  songIdx:    0,
+  round:      1,
+  winScore:   5,
+  category:   'lt',
+  mode:       'songs',
+  phase:      'idle',
+  timerVal:   10,
+  timerIv:    null,
+  confettiR:  null,
 };
 
 /* ── PHASE CONFIG ──────────────────────── */
 const PHASES = {
-  idle:      { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
-  clip:      { replay:true,  reveal:false, skip:true,  judge:false, next:false, timer:false },
-  timer:     { replay:true,  reveal:true,  skip:true,  judge:false, next:false, timer:true  },
-  revealing: { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
-  judging:   { replay:false, reveal:false, skip:false, judge:true,  next:false, timer:false },
-  scored:    { replay:false, reveal:false, skip:false, judge:false, next:true,  timer:false },
+  idle:        { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
+  clip:        { replay:true,  reveal:false, skip:true,  judge:false, next:false, timer:false },
+  timer:       { replay:true,  reveal:true,  skip:true,  judge:false, next:false, timer:true  },
+  revealing:   { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
+  judging:     { replay:false, reveal:false, skip:false, judge:true,  next:false, timer:false },
+  scored:      { replay:false, reveal:false, skip:false, judge:false, next:true,  timer:false },
+  'qa-question':{ replay:false, reveal:true,  skip:false, judge:false, next:false, timer:true  },
 };
 
 function setPhase(p) {
@@ -831,10 +960,11 @@ function setPhase(p) {
   setVis('row-skip',  cfg.skip);
 
   const msgs = {
-    clip:      '🎵 Klausyk atidžiai…',
-    timer:     '💭 Kokie dainos žodžiai toliau?',
-    revealing: '▶ Klausyk teisingo atsakymo…',
-    judging:   'Vedėjas: ar atsakymas teisingas?',
+    clip:          '🎵 Klausyk atidžiai…',
+    timer:         '💭 Kokie dainos žodžiai toliau?',
+    revealing:     '▶ Klausyk teisingo atsakymo…',
+    judging:       'Vedėjas: ar atsakymas teisingas?',
+    'qa-question': '❓ Perskaityk klausimą ir lauk atsakymų!',
   };
   if (msgs[p]) setStatus(msgs[p]);
 }
@@ -844,14 +974,23 @@ function setPhase(p) {
 ══════════════════════════════════════════ */
 async function loadSongs() {
   try {
-    const r = await fetch('songs.json');
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    G.allSongs = await r.json();
+    const [sr, qr] = await Promise.all([fetch('songs.json'), fetch('questions.json')]);
+    G.allSongs = sr.ok ? await sr.json() : [];
+    G.allQs    = qr.ok ? await qr.json() : [];
     updateSongNote();
     checkStart();
   } catch (e) {
-    el('songs-note').textContent = `⚠️ Nepavyko įkelti songs.json (${e.message})`;
+    el('songs-note').textContent = `⚠️ Nepavyko įkelti duomenų (${e.message})`;
   }
+}
+
+function selectMode(mode) {
+  G.mode = mode;
+  el('mode-songs').className = 'mode-btn' + (mode === 'songs' ? ' active-songs' : '');
+  el('mode-qa').className    = 'mode-btn' + (mode === 'qa'    ? ' active-qa'    : '');
+  el('cat-card').style.display = mode === 'songs' ? '' : 'none';
+  updateSongNote();
+  checkStart();
 }
 
 function selectCat(cat) {
@@ -865,8 +1004,11 @@ function selectCat(cat) {
 }
 
 function updateSongNote() {
-  const count = filteredSongs().length;
-  el('songs-note').textContent = `✅ ${count} dainų paruošta`;
+  if (G.mode === 'qa') {
+    el('songs-note').textContent = `✅ ${G.allQs.length} klausimų paruošta`;
+  } else {
+    el('songs-note').textContent = `✅ ${filteredSongs().length} dainų paruošta`;
+  }
 }
 
 function filteredSongs() {
@@ -905,7 +1047,8 @@ function renderPlayerList() {
 }
 
 function checkStart() {
-  el('btn-start').disabled = G.players.length < 2 || filteredSongs().length === 0;
+  const ready = G.mode === 'qa' ? G.allQs.length > 0 : filteredSongs().length > 0;
+  el('btn-start').disabled = G.players.length < 2 || !ready;
 }
 
 function startGame() {
@@ -915,12 +1058,13 @@ function startGame() {
   G.round     = 1;
   G.players.forEach(p => p.score = 0);
 
-  const s = [...filteredSongs()];
-  for (let i = s.length - 1; i > 0; i--) {
+  const pool = G.mode === 'qa' ? [...G.allQs] : [...filteredSongs()];
+  for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [s[i], s[j]] = [s[j], s[i]];
+    [pool[i], pool[j]] = [pool[j], pool[i]];
   }
-  G.songs = s;
+  if (G.mode === 'qa') { G.questions = pool; G.songs = []; }
+  else                 { G.songs = pool; G.questions = []; }
 
   showScreen('game');
   el('sb-label').textContent = `Rezultatai — pirmasis surinkęs ${G.winScore} taškų laimi!`;
@@ -957,15 +1101,19 @@ function playSegment(videoId, startSec, endSec, onEnd) {
    ROUND LIFECYCLE
 ══════════════════════════════════════════ */
 function loadRound() {
+  if (G.mode === 'qa') { loadQARound(); return; }
+
   const song   = G.songs[G.songIdx % G.songs.length];
   const player = G.players[G.playerIdx];
   const vid    = extractVid(song.youtubeUrl);
 
   clearTimeout(clipTimer);
-  waitForPlay = null;
 
-  el('song-reveal').style.display = 'none';
-  el('lyrics-box').style.display  = 'none';
+  el('song-reveal').style.display  = 'none';
+  el('lyrics-box').style.display   = 'none';
+  el('question-card').style.display = 'none';
+  el('answers-grid').style.display  = 'none';
+  el('video-wrap').style.display    = '';
   el('turn-label').innerHTML = `<span class="pname">${esc(player.name)}</span> žaidžia`;
   el('round-pill').textContent = `Ratas ${G.round}`;
   renderScoreboard();
@@ -978,6 +1126,44 @@ function loadRound() {
 
   setPhase('clip');
   playSegment(vid, song.clip.startSeconds, song.clip.endSeconds, () => setPhase('timer'));
+}
+
+function loadQARound() {
+  const q      = G.questions[G.songIdx % G.questions.length];
+  const player = G.players[G.playerIdx];
+
+  el('video-wrap').style.display    = 'none';
+  el('song-reveal').style.display   = 'none';
+  el('lyrics-box').style.display    = 'none';
+  el('question-card').style.display = '';
+  el('answers-grid').style.display  = 'grid';
+  el('turn-label').innerHTML = `<span class="pname">${esc(player.name)}</span> žaidžia`;
+  el('round-pill').textContent = `Ratas ${G.round}`;
+  renderScoreboard();
+
+  el('q-text').textContent = q.question;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  el('answers-grid').innerHTML = q.answers.map((a, i) =>
+    `<div class="ans-btn" id="ans-${i}">
+      <span class="ans-letter">${letters[i]}</span>${esc(a)}
+    </div>`
+  ).join('');
+
+  setPhase('qa-question');
+  setStatus('💭 Žaidėjai spėja atsakymą…');
+}
+
+function revealQAnswer() {
+  const q = G.questions[G.songIdx % G.questions.length];
+  const letters = ['A', 'B', 'C', 'D'];
+  q.answers.forEach((_, i) => {
+    const btn = el('ans-' + i);
+    if (i === q.correct) btn.classList.add('ans-correct');
+    else                  btn.classList.add('ans-wrong');
+  });
+  setPhase('judging');
+  setStatus(`✅ Teisingas atsakymas: ${letters[q.correct]} — ${esc(q.answers[q.correct])}`);
 }
 
 function replayClip() {
@@ -994,6 +1180,7 @@ function replayClip() {
 }
 
 function revealAnswer() {
+  if (G.mode === 'qa') { revealQAnswer(); return; }
   const song = G.songs[G.songIdx % G.songs.length];
   const vid  = extractVid(song.youtubeUrl);
 
@@ -1087,6 +1274,7 @@ function advanceSong() {
 }
 
 function skipSong() {
+  if (G.mode !== 'songs') return;
   clearPoll();
   clearTimer();
   try { el('yt-player').src = 'about:blank'; } catch(_) {}
