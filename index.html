@@ -195,7 +195,14 @@
       margin: 0 auto;
       padding: 2.5rem 1rem 5rem;
     }
-    .logo { text-align: center; margin-bottom: 2.5rem; }
+    .logo { margin-bottom: 2.5rem; }
+    .logo-hero {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: .5rem;
+    }
+    .logo-text { text-align: left; flex: 1; }
     .logo h1 {
       font-family: 'Fredoka One', cursive;
       font-size: 2.8rem;
@@ -218,6 +225,20 @@
       margin-top: .4rem;
       font-size: .95rem;
       letter-spacing: .02em;
+    }
+    .meda-img {
+      height: 170px;
+      width: auto;
+      object-fit: cover;
+      object-position: top center;
+      flex-shrink: 0;
+      border-radius: 14px 14px 0 0;
+      filter: saturate(.85) brightness(.92);
+      -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%),
+                          linear-gradient(to right, transparent 0%, black 18%);
+      -webkit-mask-composite: source-in;
+      mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+      mix-blend-mode: screen;
     }
 
     .add-row { display: flex; gap: .5rem; margin-bottom: .75rem; }
@@ -600,8 +621,13 @@
 <div id="setup" class="screen active">
   <div style="max-width:540px;margin:0 auto;padding:2.5rem 1rem 5rem">
     <div class="logo">
-      <h1>🎵 Medos Dainų Viktorina</h1>
-      <p>Ar atspėsi, kas dainuojama toliau?</p>
+      <div class="logo-hero">
+        <div class="logo-text">
+          <h1>🎵 Medos Dainų Viktorina</h1>
+          <p>Ar atspėsi, kas dainuojama toliau?</p>
+        </div>
+        <img src="meda.png" class="meda-img" alt="Meda" />
+      </div>
     </div>
 
     <div class="card">
