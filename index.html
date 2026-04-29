@@ -1167,7 +1167,7 @@ function startGame() {
   else                 { G.songs = pool; G.questions = []; }
 
   showScreen('game');
-  el('sb-label').textContent = `Rezultatai — pirmasis surinkęs ${G.winScore} taškų laimi!`;
+  el('sb-label').textContent = 'Rezultatai';
   loadRound();
 }
 
@@ -1239,7 +1239,7 @@ function loadQARound() {
   el('video-wrap').style.display    = 'none';
   el('song-reveal').style.display   = 'none';
   el('lyrics-box').style.display    = 'none';
-  el('question-card').style.display = '';
+  el('question-card').style.display = 'block';
   el('answers-grid').style.display  = 'grid';
   el('sb').style.display            = 'none';
   el('row-next-qa').style.display   = 'none';
