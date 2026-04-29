@@ -34,5 +34,77 @@
       "startSeconds": 60,
       "endSeconds": 73
     }
+  },
+  {
+    "id": 4,
+    "title": "SMS",
+    "artist": "Dj Dalgis",
+    "youtubeUrl": "https://www.youtube.com/watch?v=e6oiNjFSiwc",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 5,
+    "title": "Kauniete",
+    "artist": "Dj Dalgis",
+    "youtubeUrl": "https://www.youtube.com/watch?v=QzSTFC32pjs",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 6,
+    "title": "Jis",
+    "artist": "Ledi Ais",
+    "youtubeUrl": "https://www.youtube.com/watch?v=cEphRPEYuSg",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 7,
+    "title": "Oro bučinukas",
+    "artist": "Neringa Nekrašiūtė",
+    "youtubeUrl": "https://www.youtube.com/watch?v=3f8_RpkWy2I",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 8,
+    "title": "Miražas",
+    "artist": "Aleksandras Makejevas",
+    "youtubeUrl": "https://www.youtube.com/watch?v=w1x2QXK-dIA",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 9,
+    "title": "Ragų puota",
+    "artist": "Vitalijus Pauliukas",
+    "youtubeUrl": "https://www.youtube.com/watch?v=i3i6Jm1ZOJ4",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
   }
 ]
