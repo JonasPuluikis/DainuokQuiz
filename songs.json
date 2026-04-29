@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Blinding Lights",
+    "artist": "The Weeknd",
+    "youtubeUrl": "https://www.youtube.com/watch?v=XwxLwG2_Sxk",
+    "clip": { "startSeconds": 55, "endSeconds": 65 },
+    "answer": {
+      "lyrics": "I said ooh, I'm blinded by the lights, no I can't sleep until I feel your touch",
+      "startSeconds": 65,
+      "endSeconds": 78
+    }
+  },
+  {
+    "id": 2,
+    "title": "Shape of You",
+    "artist": "Ed Sheeran",
+    "youtubeUrl": "https://www.youtube.com/watch?v=_dK2tDK9grQ",
+    "clip": { "startSeconds": 42, "endSeconds": 52 },
+    "answer": {
+      "lyrics": "I'm in love with your body",
+      "startSeconds": 52,
+      "endSeconds": 60
+    }
+  },
+  {
+    "id": 3,
+    "title": "Stay With Me",
+    "artist": "Sam Smith",
+    "youtubeUrl": "https://www.youtube.com/watch?v=bXDSR4GggUU",
+    "clip": { "startSeconds": 50, "endSeconds": 60 },
+    "answer": {
+      "lyrics": "Oh won't you stay with me, cause you're all I need",
+      "startSeconds": 60,
+      "endSeconds": 73
+    }
+  }
+]
