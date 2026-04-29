@@ -106,5 +106,461 @@
       "startSeconds": 42,
       "endSeconds": 55
     }
+  },
+  {
+    "id": 10,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Ce-CQX6dWq0",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 11,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=R2L7K7qAovo",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 12,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=e6xrhTYtDNs",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 13,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=gtqCHlqC9so",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 14,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=BDWC4S11KzY",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 15,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=p6OWjxN0Dhc",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 16,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=1o9sjRhn-jU",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 17,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=0Rcrn4fTDkg",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 18,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=tWouxY5QD40",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 19,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Jk7-N4DDomI",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 20,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=A-i2CkCnPoc",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 21,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=F-xSjY_TKkw",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 22,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=mFSImuj2HRs",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 23,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=keOB2S6SXMM",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 24,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=_8hxk18vHHg",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 25,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=BkL0JluhWus",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 26,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=ehuki-AA8tk",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 27,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=eALQxD-aTQk",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 28,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=kV4SiPWrW0Y",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 29,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=xR6ZV4arkzQ",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 30,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=EFxW25GC7Xg",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 31,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=dT5kxOdfWuM",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 32,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=fI3reHVY1kw",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 33,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=B-xsuUb9Ddw",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 34,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=H2CBmCN1XY4",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 35,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=80tDAOuafio",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 36,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=eOS-eXdt5mw",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 37,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=LNNlIL1taZw",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 38,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=7-ybOpZNX78",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 39,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=gGvQnXN6BmI",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 40,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=mYK_hpAVd6g",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 41,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=ACEgHs16wMo",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 42,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=OLFUYgnUDzo",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 43,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=4vNPDCQ6LCg",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 44,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=rsVRlKeigCg",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 45,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=icaR010C1U4",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 46,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=bK2jDat-L-A",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
+  },
+  {
+    "id": 47,
+    "title": "[ pavadinimas ]",
+    "artist": "[ atlikėjas ]",
+    "youtubeUrl": "https://www.youtube.com/watch?v=PO7_oEgRqCE",
+    "clip": { "startSeconds": 30, "endSeconds": 42 },
+    "answer": {
+      "lyrics": "[ įrašykite teisingus žodžius ]",
+      "startSeconds": 42,
+      "endSeconds": 55
+    }
   }
 ]
