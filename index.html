@@ -448,9 +448,7 @@
 
     <div class="video-wrap">
       <div class="video-ratio">
-        <iframe id="yt-player" src="about:blank" title="YouTube video player" frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div id="yt-player"></div>
       </div>
     </div>
 
@@ -618,58 +616,67 @@ function startGame() {
 
   showScreen('game');
   el('sb-label').textContent = `Scoreboard — first to ${G.winScore} wins!`;
-  loadRound();
+  initYT();
 }
 
 /* ══════════════════════════════════════════
-   YOUTUBE — direct iframe + postMessage
+   YOUTUBE IFRAME API
 ══════════════════════════════════════════ */
-let clipTimer     = null;
-let waitForPlay   = null;
+let ytPlayer = null;
+let ytWait   = false;
+let pollIv   = null;
+let curVid   = null;
 
-/* YouTube player sends postMessage when state changes.
-   State 1 = playing — we start the clip-end countdown from here
-   so the duration is exact regardless of buffering time.       */
-window.addEventListener('message', function (e) {
-  try {
-    const msg = JSON.parse(e.data);
-    if (msg.event === 'onStateChange' && msg.info === 1 && waitForPlay) {
-      const { duration, onEnd } = waitForPlay;
-      waitForPlay = null;
-      clearTimeout(clipTimer);
-      clipTimer = setTimeout(() => {
-        el('yt-player').src = 'about:blank';
-        onEnd();
-      }, duration);
-    }
-  } catch (_) {}
-});
+function initYT() {
+  if (ytPlayer) { loadRound(); return; }
+  ytWait = true;
+  const s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(s);
+}
+
+window.onYouTubeIframeAPIReady = function () {
+  ytPlayer = new YT.Player('yt-player', {
+    height: '100%', width: '100%',
+    playerVars: {
+      autoplay: 0, controls: 0, disablekb: 1,
+      fs: 0, modestbranding: 1, rel: 0,
+      iv_load_policy: 3, playsinline: 1,
+    },
+    events: {
+      onError: () => {
+        setStatus('⚠️ Video unavailable — skipping…');
+        clearPoll();
+        setTimeout(advanceSong, 1800);
+      },
+    },
+  });
+  if (ytWait) { ytWait = false; setTimeout(loadRound, 400); }
+};
 
 function clearPoll() {
-  clearTimeout(clipTimer);
-  clipTimer   = null;
-  waitForPlay = null;
-  try { el('yt-player').src = 'about:blank'; } catch (_) {}
+  clearInterval(pollIv);
+  pollIv = null;
 }
 
 function playSegment(videoId, startSec, endSec, onEnd) {
-  clearTimeout(clipTimer);
-  waitForPlay = { duration: (endSec - startSec) * 1000, onEnd };
-  el('yt-player').src =
-    `https://www.youtube.com/embed/${videoId}`
-    + `?autoplay=1&start=${Math.floor(startSec)}`
-    + `&enablejsapi=1&controls=0&rel=0&modestbranding=1`
-    + `&playsinline=1&iv_load_policy=3`;
-
-  /* Fallback: if video never fires a play event (blocked/region-locked),
-     skip after 8 seconds so the game doesn't freeze.                    */
-  clipTimer = setTimeout(() => {
-    if (waitForPlay) {
-      waitForPlay = null;
-      setStatus('⚠️ Video blocked or unavailable — skipping…');
-      setTimeout(advanceSong, 1200);
-    }
-  }, 8000);
+  clearPoll();
+  if (curVid === videoId) {
+    ytPlayer.seekTo(startSec, true);
+    ytPlayer.playVideo();
+  } else {
+    curVid = videoId;
+    ytPlayer.loadVideoById({ videoId, startSeconds: startSec });
+  }
+  pollIv = setInterval(() => {
+    try {
+      if (ytPlayer.getCurrentTime() >= endSec) {
+        ytPlayer.pauseVideo();
+        clearPoll();
+        onEnd();
+      }
+    } catch (_) {}
+  }, 200);
 }
 
 /* ══════════════════════════════════════════
@@ -813,10 +820,9 @@ function renderScoreboard(animate = false) {
    WINNER
 ══════════════════════════════════════════ */
 function showWinner(winner) {
-  clearTimeout(clipTimer);
-  waitForPlay = null;
+  clearPoll();
   clearTimer();
-  try { el('yt-player').src = 'about:blank'; } catch (_) {}
+  try { ytPlayer?.pauseVideo(); } catch (_) {}
 
   el('winner-name').textContent = `${winner.name} wins!`;
 
