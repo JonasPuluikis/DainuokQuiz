@@ -52,5 +52,49 @@
         "correct": 1
       }
     ]
+  },
+  {
+    "id": "asmeniniai",
+    "name": "Asmeniniai",
+    "emoji": "🙋",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Kiek metų jau nevalgau mėsos?",
+        "answers": ["2", "5", "10", "Nuo vakar"],
+        "correct": 2
+      },
+      {
+        "id": 2,
+        "question": "Kelių metų skirtumas yra tarp manęs ir brolio?",
+        "answers": ["2 metais", "1 metais", "3 metais", "Mes dvyniai"],
+        "correct": 0
+      }
+    ]
+  },
+  {
+    "id": "labaisvarbu",
+    "name": "Labai svarbi informacija",
+    "emoji": "🚨",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Kuris gyvūnas man patinka LABAI keistai daug?",
+        "answers": ["Gyvatės", "Buožgalviai", "Žiurkės", "Jaučiai"],
+        "correct": 1
+      },
+      {
+        "id": 2,
+        "question": "Kas man skaniau?",
+        "answers": ["Pomidorai", "Agurkai"],
+        "correct": 1
+      },
+      {
+        "id": 3,
+        "question": "Ką aš valgau labai dažnai?",
+        "answers": ["Morkas", "Ridikėlius", "Kopūstus", "Ledus"],
+        "correct": 1
+      }
+    ]
   }
 ]
