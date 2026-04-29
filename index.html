@@ -859,11 +859,6 @@
       </div>
     </div>
 
-    <div class="card" id="tour-card" style="display:none">
-      <div class="card-label">Turas</div>
-      <div class="tour-grid" id="tour-grid"></div>
-    </div>
-
     <div class="card" id="cat-card">
       <div class="card-label">Kategorija</div>
       <div class="cat-grid">
@@ -1054,10 +1049,6 @@ async function loadSongs() {
     const [sr, qr] = await Promise.all([fetch('songs.json'), fetch('questions.json')]);
     G.allSongs = sr.ok ? await sr.json() : [];
     G.allTours = qr.ok ? await qr.json() : [];
-    if (G.allTours.length) {
-      G.tourId = G.allTours[0].id;
-      renderTourGrid();
-    }
     updateSongNote();
     checkStart();
   } catch (e) {
@@ -1065,32 +1056,11 @@ async function loadSongs() {
   }
 }
 
-function renderTourGrid() {
-  el('tour-grid').innerHTML = G.allTours.map(t => {
-    const active = t.id === G.tourId ? ' active-tour' : '';
-    return `<button class="tour-btn${active}" onclick="selectTour('${t.id}')">
-      <span class="tour-icon">${t.emoji || '❓'}</span>
-      <span class="tour-info">
-        <span class="tour-name">${esc(t.name)}</span>
-        <span class="tour-count">${t.questions.length} klausimai</span>
-      </span>
-    </button>`;
-  }).join('');
-}
-
-function selectTour(id) {
-  G.tourId = id;
-  renderTourGrid();
-  updateSongNote();
-  checkStart();
-}
-
 function selectMode(mode) {
   G.mode = mode;
   el('mode-songs').className = 'mode-btn' + (mode === 'songs' ? ' active-songs' : '');
   el('mode-qa').className    = 'mode-btn' + (mode === 'qa'    ? ' active-qa'    : '');
-  el('cat-card').style.display  = mode === 'songs' ? '' : 'none';
-  el('tour-card').style.display = mode === 'qa'    ? '' : 'none';
+  el('cat-card').style.display = mode === 'songs' ? '' : 'none';
   updateSongNote();
   checkStart();
 }
@@ -1107,9 +1077,8 @@ function selectCat(cat) {
 
 function updateSongNote() {
   if (G.mode === 'qa') {
-    const tour = G.allTours.find(t => t.id === G.tourId);
-    const count = tour ? tour.questions.length : 0;
-    el('songs-note').textContent = `✅ ${count} klausimų paruošta`;
+    const total = G.allTours.reduce((s, t) => s + t.questions.length, 0);
+    el('songs-note').textContent = `✅ ${total} klausimų · ${G.allTours.length} turai`;
   } else {
     el('songs-note').textContent = `✅ ${filteredSongs().length} dainų paruošta`;
   }
@@ -1151,13 +1120,9 @@ function renderPlayerList() {
 }
 
 function checkStart() {
-  let ready;
-  if (G.mode === 'qa') {
-    const tour = G.allTours.find(t => t.id === G.tourId);
-    ready = tour && tour.questions.length > 0;
-  } else {
-    ready = filteredSongs().length > 0;
-  }
+  const ready = G.mode === 'qa'
+    ? G.allTours.reduce((s, t) => s + t.questions.length, 0) > 0
+    : filteredSongs().length > 0;
   el('btn-start').disabled = G.players.length < 2 || !ready;
 }
 
@@ -1170,14 +1135,25 @@ function startGame() {
 
   let pool;
   if (G.mode === 'qa') {
-    const tour = G.allTours.find(t => t.id === G.tourId) || G.allTours[0];
-    pool = [...(tour ? tour.questions : [])];
+    // flatten all tours in order, tagging each question with its tour info
+    pool = G.allTours.flatMap(tour =>
+      tour.questions.map(q => ({
+        ...q,
+        tourId:   tour.id,
+        tourName: tour.name,
+        tourEmoji: tour.emoji || '❓',
+        tourType: tour.type || null,
+        answers:  q.answers || [],
+      }))
+    );
   } else {
     pool = [...filteredSongs()];
   }
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
+  if (G.mode === 'songs') {
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
   }
   if (G.mode === 'qa') { G.questions = pool; G.songs = []; }
   else                 { G.songs = pool; G.questions = []; }
@@ -1249,7 +1225,7 @@ function loadRound() {
 function loadQARound() {
   const q      = G.questions[G.songIdx % G.questions.length];
   const player = G.players[G.playerIdx];
-  const tour   = G.allTours.find(t => t.id === G.tourId);
+  const tour   = { name: q.tourName, emoji: q.tourEmoji, type: q.tourType };
 
   el('video-wrap').style.display    = 'none';
   el('song-reveal').style.display   = 'none';
@@ -1291,8 +1267,7 @@ function loadQARound() {
 
 function revealQAnswer() {
   const q    = G.questions[G.songIdx % G.questions.length];
-  const tour = G.allTours.find(t => t.id === G.tourId);
-  const isTF = tour && tour.type === 'truefalse';
+  const isTF = q.tourType === 'truefalse';
 
   const count = isTF ? 2 : q.answers.length;
   for (let i = 0; i < count; i++) {
