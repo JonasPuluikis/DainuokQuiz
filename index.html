@@ -281,6 +281,48 @@
 
     .songs-note { text-align:center; font-size:.8rem; color:var(--muted); margin-top:.75rem; }
 
+    /* category picker */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .6rem;
+    }
+    .cat-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      padding: .85rem .5rem;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      background: rgba(18,18,42,.7);
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: .95rem;
+      cursor: pointer;
+      transition: transform .15s cubic-bezier(.34,1.56,.64,1), border-color .15s, background .15s, box-shadow .15s;
+    }
+    .cat-btn .cat-icon { font-size: 1.8rem; }
+    .cat-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+    .cat-btn.active-lt {
+      border-color: #ffd60a;
+      background: rgba(255,214,10,.12);
+      box-shadow: 0 0 18px rgba(255,214,10,.35);
+    }
+    .cat-btn.active-world {
+      border-color: var(--cyan);
+      background: rgba(6,214,214,.12);
+      box-shadow: 0 0 18px rgba(6,214,214,.35);
+    }
+    .cat-btn.active-mix {
+      border-color: var(--pink);
+      background: rgba(255,0,110,.12);
+      box-shadow: 0 0 18px rgba(255,0,110,.35);
+    }
+
     /* ── GAME ───────────────────────────────────────── */
     #game.active { display: flex; flex-direction: column; min-height: 100vh; }
     .game-wrap {
@@ -631,6 +673,21 @@
     </div>
 
     <div class="card">
+      <div class="card-label">Kategorija</div>
+      <div class="cat-grid">
+        <button class="cat-btn active-lt" id="cat-lt" onclick="selectCat('lt')">
+          <span class="cat-icon">🇱🇹</span>Lietuviškos dainos
+        </button>
+        <button class="cat-btn" id="cat-world" onclick="selectCat('world')">
+          <span class="cat-icon">🌍</span>Pasaulinės dainos
+        </button>
+        <button class="cat-btn" id="cat-mix" onclick="selectCat('mix')">
+          <span class="cat-icon">🎲</span>MIX
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-label">Pridėti žaidėjus (min. 2)</div>
       <div class="add-row">
         <input type="text" id="name-input" placeholder="Žaidėjo vardas…" maxlength="24" autocomplete="off" />
@@ -731,12 +788,14 @@
    GAME STATE
 ══════════════════════════════════════════ */
 const G = {
+  allSongs:  [],
   songs:     [],
   players:   [],
   playerIdx: 0,
   songIdx:   0,
   round:     1,
   winScore:  5,
+  category:  'lt',
   phase:     'idle',
   timerVal:  10,
   timerIv:   null,
@@ -787,12 +846,32 @@ async function loadSongs() {
   try {
     const r = await fetch('songs.json');
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    G.songs = await r.json();
-    el('songs-note').textContent = `✅ ${G.songs.length} dainų paruošta`;
+    G.allSongs = await r.json();
+    updateSongNote();
     checkStart();
   } catch (e) {
-    el('songs-note').textContent = `⚠️ Nepavyko įkelti songs.json — įsitikinkite, kad veikia Live Server (${e.message})`;
+    el('songs-note').textContent = `⚠️ Nepavyko įkelti songs.json (${e.message})`;
   }
+}
+
+function selectCat(cat) {
+  G.category = cat;
+  ['lt','world','mix'].forEach(c => {
+    const btn = el('cat-' + c);
+    btn.className = 'cat-btn' + (c === cat ? ' active-' + c : '');
+  });
+  updateSongNote();
+  checkStart();
+}
+
+function updateSongNote() {
+  const count = filteredSongs().length;
+  el('songs-note').textContent = `✅ ${count} dainų paruošta`;
+}
+
+function filteredSongs() {
+  if (G.category === 'mix') return G.allSongs;
+  return G.allSongs.filter(s => s.category === G.category);
 }
 
 el('name-input').addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer(); });
@@ -826,7 +905,7 @@ function renderPlayerList() {
 }
 
 function checkStart() {
-  el('btn-start').disabled = G.players.length < 2 || G.songs.length === 0;
+  el('btn-start').disabled = G.players.length < 2 || filteredSongs().length === 0;
 }
 
 function startGame() {
@@ -836,7 +915,7 @@ function startGame() {
   G.round     = 1;
   G.players.forEach(p => p.score = 0);
 
-  const s = [...G.songs];
+  const s = [...filteredSongs()];
   for (let i = s.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [s[i], s[j]] = [s[j], s[i]];
