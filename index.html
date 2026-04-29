@@ -622,75 +622,29 @@ function startGame() {
 }
 
 /* ══════════════════════════════════════════
-   YOUTUBE — direct iframe + postMessage
+   YOUTUBE — direct iframe, timer-based clips
 ══════════════════════════════════════════ */
-let curVid      = null;
-let clipTimer   = null;
-let waitForPlay = null;
-
-/* When YouTube receives a 'listening' postMessage it starts
-   sending onStateChange events back to the parent window.   */
-window.addEventListener('message', function (e) {
-  if (!e.data || typeof e.data !== 'string') return;
-  try {
-    const msg = JSON.parse(e.data);
-    if (msg.event === 'onStateChange' && msg.info === 1 && waitForPlay) {
-      const { duration, onEnd } = waitForPlay;
-      waitForPlay = null;
-      clearTimeout(clipTimer);
-      clipTimer = setTimeout(() => { ytCmd('pauseVideo'); onEnd(); }, duration);
-    }
-  } catch (_) {}
-});
-
-function ytCmd(func, args = []) {
-  try {
-    el('yt-player').contentWindow.postMessage(
-      JSON.stringify({ event: 'command', func, args }), '*'
-    );
-  } catch (_) {}
-}
+let clipTimer = null;
 
 function clearPoll() {
   clearTimeout(clipTimer);
-  clipTimer   = null;
-  waitForPlay = null;
-  ytCmd('pauseVideo');
+  clipTimer = null;
 }
 
 function playSegment(videoId, startSec, endSec, onEnd) {
-  clearTimeout(clipTimer);
-  waitForPlay = { duration: (endSec - startSec) * 1000, onEnd };
+  clearPoll();
   const frame = el('yt-player');
-
-  if (curVid === videoId) {
-    /* Same video already loaded — seek and play via postMessage */
-    ytCmd('seekTo', [startSec, true]);
-    ytCmd('playVideo');
-  } else {
-    /* New video — set src, register listener after load */
-    curVid     = videoId;
-    frame.src  = `https://www.youtube.com/embed/${videoId}`
-               + `?autoplay=1&start=${Math.floor(startSec)}`
-               + `&enablejsapi=1&controls=0&rel=0&modestbranding=1`
-               + `&playsinline=1&iv_load_policy=3`;
-    frame.onload = () => {
-      frame.onload = null;
-      /* Tell YouTube we are listening so it starts sending events */
-      frame.contentWindow.postMessage(
-        JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'
-      );
-    };
-  }
-
-  /* Fallback: skip if video never fires a play event after 10s */
-  clipTimer = setTimeout(() => {
-    if (waitForPlay) {
-      waitForPlay = null;
-      setStatus('⚠️ Video unavailable — skipping…');
-      setTimeout(advanceSong, 1500);
-    }
-  }, 10000);
+  frame.onload = null;
+  frame.src = `https://www.youtube.com/embed/${videoId}`
+            + `?autoplay=1&start=${Math.floor(startSec)}`
+            + `&controls=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`;
+  frame.onload = () => {
+    frame.onload = null;
+    clipTimer = setTimeout(() => {
+      frame.src = 'about:blank';
+      onEnd();
+    }, (endSec - startSec) * 1000);
+  };
 }
 
 /* ══════════════════════════════════════════
@@ -836,6 +790,7 @@ function renderScoreboard(animate = false) {
 function showWinner(winner) {
   clearPoll();
   clearTimer();
+  try { el('yt-player').src = 'about:blank'; } catch (_) {}
 
   el('winner-name').textContent = `${winner.name} wins!`;
 
