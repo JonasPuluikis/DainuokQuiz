@@ -736,7 +736,7 @@ function setPhase(p) {
 
   setVis('btn-replay', cfg.replay);
   setVis('btn-reveal', cfg.reveal);
-  el('btn-reveal').disabled = (p === 'timer') || !cfg.reveal;
+  el('btn-reveal').disabled = !cfg.reveal;
   setVis('row-judge', cfg.judge);
   setVis('row-next',  cfg.next);
 
@@ -880,7 +880,6 @@ function replayClip() {
     setPhase('timer');
     clearTimer();
     el('timer-wrap').style.display = 'none';
-    el('btn-reveal').disabled = false;
   });
 }
 
@@ -989,7 +988,7 @@ function checkWinner() {
 function startTimer() {
   clearTimer();
   G.timerVal = 10;
-  el('timer-wrap').style.display = '';
+  el('timer-wrap').style.display = 'block';
   tickTimer();
   G.timerIv = setInterval(() => {
     G.timerVal = Math.max(0, G.timerVal - 1);
