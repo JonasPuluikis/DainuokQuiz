@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lyrics Quiz</title>
+  <title>Dainų Viktorina</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet" />
@@ -404,31 +404,31 @@
 <div id="setup" class="screen active">
   <div style="max-width:540px;margin:0 auto;padding:2.5rem 1rem 5rem">
     <div class="logo">
-      <h1>🎵 Lyrics Quiz</h1>
-      <p>Can you guess what comes next?</p>
+      <h1>🎵 Dainų Viktorina</h1>
+      <p>Ar atspėsi, kas dainuojama toliau?</p>
     </div>
 
     <div class="card">
-      <div class="card-label">Add Players (min. 2)</div>
+      <div class="card-label">Pridėti žaidėjus (min. 2)</div>
       <div class="add-row">
-        <input type="text" id="name-input" placeholder="Player name…" maxlength="24" autocomplete="off" />
-        <button class="btn btn-accent btn-md" onclick="addPlayer()">Add</button>
+        <input type="text" id="name-input" placeholder="Žaidėjo vardas…" maxlength="24" autocomplete="off" />
+        <button class="btn btn-accent btn-md" onclick="addPlayer()">Pridėti</button>
       </div>
       <div class="player-list" id="player-list"></div>
     </div>
 
     <div class="card">
-      <div class="card-label">Win Condition</div>
+      <div class="card-label">Pergalės sąlyga</div>
       <div class="winscore-row">
-        <label for="win-score">First to reach this score wins:</label>
+        <label for="win-score">Pirmasis surinkęs šį balų skaičių laimi:</label>
         <input type="number" id="win-score" value="5" min="2" max="20" />
       </div>
     </div>
 
     <button class="btn btn-accent btn-lg btn-full" id="btn-start" onclick="startGame()" disabled>
-      ▶ Start Game
+      ▶ Pradėti žaidimą
     </button>
-    <p class="songs-note" id="songs-note">Loading songs…</p>
+    <p class="songs-note" id="songs-note">Kraunamos dainos…</p>
   </div>
 </div>
 
@@ -438,11 +438,11 @@
 
     <div class="topbar">
       <div class="turn-label" id="turn-label">…</div>
-      <div class="round-pill" id="round-pill">Round 1</div>
+      <div class="round-pill" id="round-pill">Ratas 1</div>
     </div>
 
     <div class="sb">
-      <div class="sb-label" id="sb-label">Scoreboard</div>
+      <div class="sb-label" id="sb-label">Rezultatai</div>
       <div class="sb-rows" id="sb-rows"></div>
     </div>
 
@@ -455,7 +455,7 @@
     </div>
 
     <div class="timer-wrap" id="timer-wrap">
-      <div class="timer-lbl">Time to guess!</div>
+      <div class="timer-lbl">Laikas spėti!</div>
       <div class="timer-num t-go" id="timer-num">10</div>
     </div>
 
@@ -471,17 +471,17 @@
     <div class="actions">
       <!-- Step 1+2: replay / reveal -->
       <div class="btn-pair" id="row-rr">
-        <button class="btn btn-ghost btn-lg" id="btn-replay" onclick="replayClip()" style="display:none">🔁 Replay Clip</button>
-        <button class="btn btn-cyan  btn-lg" id="btn-reveal" onclick="revealAnswer()" style="display:none" disabled>🎵 Reveal Answer</button>
+        <button class="btn btn-ghost btn-lg" id="btn-replay" onclick="replayClip()" style="display:none">🔁 Pakartoti</button>
+        <button class="btn btn-cyan  btn-lg" id="btn-reveal" onclick="revealAnswer()" style="display:none" disabled>🎵 Atskleisti atsakymą</button>
       </div>
       <!-- Step 4: judge -->
       <div class="btn-pair" id="row-judge" style="display:none">
-        <button class="btn btn-green btn-lg" onclick="markAnswer(true)">Correct ✅</button>
-        <button class="btn btn-red   btn-lg" onclick="markAnswer(false)">Wrong ❌</button>
+        <button class="btn btn-green btn-lg" onclick="markAnswer(true)">Teisingai ✅</button>
+        <button class="btn btn-red   btn-lg" onclick="markAnswer(false)">Neteisingai ❌</button>
       </div>
       <!-- Step 5: next -->
       <div class="btn-center" id="row-next" style="display:none">
-        <button class="btn btn-accent btn-lg" onclick="nextRound()">Next Round →</button>
+        <button class="btn btn-accent btn-lg" onclick="nextRound()">Kitas ratas →</button>
       </div>
     </div>
 
@@ -493,10 +493,10 @@
   <canvas id="confetti"></canvas>
   <div class="winner-box">
     <span class="winner-trophy">🏆</span>
-    <h1 id="winner-name">Player wins!</h1>
-    <p class="winner-sub">Incredible performance!</p>
+    <h1 id="winner-name">Žaidėjas laimi!</h1>
+    <p class="winner-sub">Nuostabus pasirodymas!</p>
     <div class="final-list" id="final-list"></div>
-    <button class="btn btn-accent btn-lg" style="max-width:240px;margin:0 auto" onclick="playAgain()">Play Again</button>
+    <button class="btn btn-accent btn-lg" style="max-width:240px;margin:0 auto" onclick="playAgain()">Žaisti dar kartą</button>
   </div>
 </div>
 
@@ -545,10 +545,10 @@ function setPhase(p) {
   setVis('row-next',  cfg.next);
 
   const msgs = {
-    clip:      '🎵 Listen carefully…',
-    timer:     '💭 What are the next lyrics?',
-    revealing: '▶ Hear the correct answer…',
-    judging:   'Host: was the guess correct?',
+    clip:      '🎵 Klausyk atidžiai…',
+    timer:     '💭 Kokie dainos žodžiai toliau?',
+    revealing: '▶ Klausyk teisingo atsakymo…',
+    judging:   'Vedėjas: ar atsakymas teisingas?',
   };
   if (msgs[p]) setStatus(msgs[p]);
 }
@@ -561,10 +561,10 @@ async function loadSongs() {
     const r = await fetch('songs.json');
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     G.songs = await r.json();
-    el('songs-note').textContent = `✅ ${G.songs.length} songs ready`;
+    el('songs-note').textContent = `✅ ${G.songs.length} dainų paruošta`;
     checkStart();
   } catch (e) {
-    el('songs-note').textContent = `⚠️ Could not load songs.json — make sure Live Server is running (${e.message})`;
+    el('songs-note').textContent = `⚠️ Nepavyko įkelti songs.json — įsitikinkite, kad veikia Live Server (${e.message})`;
   }
 }
 
@@ -594,7 +594,7 @@ function renderPlayerList() {
   el('player-list').innerHTML = G.players.map((p, i) => `
     <div class="player-chip">
       <span class="chip-name">${esc(p.name)}</span>
-      <button class="chip-remove" onclick="removePlayer(${i})" title="Remove">✕</button>
+      <button class="chip-remove" onclick="removePlayer(${i})" title="Pašalinti">✕</button>
     </div>`).join('');
 }
 
@@ -617,7 +617,7 @@ function startGame() {
   G.songs = s;
 
   showScreen('game');
-  el('sb-label').textContent = `Scoreboard — first to ${G.winScore} wins!`;
+  el('sb-label').textContent = `Rezultatai — pirmasis surinkęs ${G.winScore} taškų laimi!`;
   loadRound();
 }
 
@@ -660,12 +660,12 @@ function loadRound() {
 
   el('song-reveal').style.display = 'none';
   el('lyrics-box').style.display  = 'none';
-  el('turn-label').innerHTML = `<span class="pname">${esc(player.name)}</span>'s turn`;
-  el('round-pill').textContent = `Round ${G.round}`;
+  el('turn-label').innerHTML = `<span class="pname">${esc(player.name)}</span> žaidžia`;
+  el('round-pill').textContent = `Ratas ${G.round}`;
   renderScoreboard();
 
   if (!vid) {
-    setStatus('⚠️ Invalid YouTube URL — skipping…');
+    setStatus('⚠️ Netinkamas YouTube URL — praleidžiama…');
     setTimeout(advanceSong, 1500);
     return;
   }
@@ -679,7 +679,7 @@ function replayClip() {
   const vid  = extractVid(song.youtubeUrl);
   if (!vid) return;
   setPhase('clip');
-  setStatus('🔁 Replaying clip…');
+  setStatus('🔁 Kartojama ištrauka…');
   playSegment(vid, song.clip.startSeconds, song.clip.endSeconds, () => setPhase('timer'));
 }
 
@@ -689,7 +689,7 @@ function revealAnswer() {
 
   setPhase('revealing');
   el('song-title-el').textContent  = song.title;
-  el('song-artist-el').textContent = `by ${song.artist}`;
+  el('song-artist-el').textContent = `Atlikėjas: ${song.artist}`;
   el('song-reveal').style.display  = '';
   el('lyrics-box').textContent     = song.answer.lyrics;
   el('lyrics-box').style.display   = '';
@@ -702,8 +702,8 @@ function markAnswer(correct) {
   if (correct) p.score++;
 
   setStatus(correct
-    ? `✅ +1 point for ${p.name}!`
-    : `❌ No point for ${p.name}.`);
+    ? `✅ +1 taškas žaidėjui ${p.name}!`
+    : `❌ Taškas nepaskirtas ${p.name}.`);
 
   const winner = checkWinner();
 
@@ -792,7 +792,7 @@ function showWinner(winner) {
   clearTimer();
   try { el('yt-player').src = 'about:blank'; } catch (_) {}
 
-  el('winner-name').textContent = `${winner.name} wins!`;
+  el('winner-name').textContent = `${winner.name} laimi!`;
 
   const ranked = [...G.players].sort((a, b) => b.score - a.score);
   el('final-list').innerHTML = ranked.map((p, i) => {
