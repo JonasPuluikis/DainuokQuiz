@@ -876,7 +876,12 @@ function replayClip() {
   if (!vid) return;
   setPhase('clip');
   setStatus('🔁 Kartojama ištrauka…');
-  playSegment(vid, song.clip.startSeconds, song.clip.endSeconds, () => setPhase('timer'));
+  playSegment(vid, song.clip.startSeconds, song.clip.endSeconds, () => {
+    setPhase('timer');
+    clearTimer();
+    el('timer-wrap').style.display = 'none';
+    el('btn-reveal').disabled = false;
+  });
 }
 
 function revealAnswer() {
