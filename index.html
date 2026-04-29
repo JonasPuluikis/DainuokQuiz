@@ -887,7 +887,26 @@ function revealAnswer() {
   playSegment(vid, song.answer.startSeconds, song.answer.startSeconds + 7, () => setPhase('judging'));
 }
 
+function spawnFloaters(emojis) {
+  for (let i = 0; i < 16; i++) {
+    const s = document.createElement('span');
+    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    const dur   = (7 + Math.random() * 4).toFixed(1);
+    const delay = (Math.random() * 1.4).toFixed(2);
+    const size  = (1.2 + Math.random() * 2).toFixed(1);
+    s.style.cssText = `position:fixed;bottom:${(Math.random()*18).toFixed(0)}%;`
+      + `left:${(4 + Math.random()*88).toFixed(0)}%;font-size:${size}rem;`
+      + `pointer-events:none;z-index:200;opacity:0;`
+      + `animation:floatNote ${dur}s linear ${delay}s both;`;
+    document.body.appendChild(s);
+    s.addEventListener('animationend', () => s.remove());
+  }
+}
+
 function markAnswer(correct) {
+  if (correct) spawnFloaters(['😊','🎉','😄','🥳','✨','🌟','😁','🎊']);
+  else         spawnFloaters(['😢','😭','😞','💔','😩','😿','😔']);
+
   const p = G.players[G.playerIdx];
   if (correct) p.score++;
 
