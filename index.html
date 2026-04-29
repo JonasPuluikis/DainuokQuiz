@@ -887,12 +887,34 @@ function revealAnswer() {
   playSegment(vid, song.answer.startSeconds, song.answer.startSeconds + 7, () => setPhase('judging'));
 }
 
-function spawnFloaters(emojis) {
-  for (let i = 0; i < 16; i++) {
+function spawnFloaters(emojis, phrases, isCorrect) {
+  const colors = isCorrect
+    ? ['rgba(0,180,120,.9)','rgba(131,56,236,.9)','rgba(255,214,10,.92)','rgba(168,255,62,.85)']
+    : ['rgba(220,40,70,.9)','rgba(255,120,0,.9)','rgba(131,56,236,.9)'];
+
+  phrases.forEach((text, i) => {
+    const s = document.createElement('span');
+    s.textContent = text;
+    const dur   = (7 + Math.random() * 4).toFixed(1);
+    const delay = (i * 0.18 + Math.random() * 0.5).toFixed(2);
+    const bg    = colors[Math.floor(Math.random() * colors.length)];
+    const fs    = (1 + Math.random() * 0.55).toFixed(1);
+    s.style.cssText = `position:fixed;bottom:${(Math.random()*22).toFixed(0)}%;`
+      + `left:${(2 + Math.random()*82).toFixed(0)}%;`
+      + `font-family:'Fredoka One',cursive;font-size:${fs}rem;letter-spacing:.02em;`
+      + `pointer-events:none;z-index:200;opacity:0;white-space:nowrap;`
+      + `background:${bg};color:#fff;padding:.22rem .75rem;border-radius:99px;`
+      + `box-shadow:0 3px 14px rgba(0,0,0,.35);`
+      + `animation:floatNote ${dur}s linear ${delay}s both;`;
+    document.body.appendChild(s);
+    s.addEventListener('animationend', () => s.remove());
+  });
+
+  for (let i = 0; i < 10; i++) {
     const s = document.createElement('span');
     s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
     const dur   = (7 + Math.random() * 4).toFixed(1);
-    const delay = (Math.random() * 1.4).toFixed(2);
+    const delay = (Math.random() * 1.6).toFixed(2);
     const size  = (1.2 + Math.random() * 2).toFixed(1);
     s.style.cssText = `position:fixed;bottom:${(Math.random()*18).toFixed(0)}%;`
       + `left:${(4 + Math.random()*88).toFixed(0)}%;font-size:${size}rem;`
@@ -904,8 +926,16 @@ function spawnFloaters(emojis) {
 }
 
 function markAnswer(correct) {
-  if (correct) spawnFloaters(['😊','🎉','😄','🥳','✨','🌟','😁','🎊']);
-  else         spawnFloaters(['😢','😭','😞','💔','😩','😿','😔']);
+  if (correct) spawnFloaters(
+    ['😊','🎉','😄','🥳','✨','🌟','😁','🎊'],
+    ['žiaurus','maladec','tu kietas','gyvulys','važiuojam džesika','judi judi','afigenai'],
+    true
+  );
+  else spawnFloaters(
+    ['😢','😭','😞','💔','😩','😿','😔'],
+    ['ble nu kaip taip','pagarbos galima žaidimui?','susiimk','kas yra?','prastai','liudna','jopapa','nu nx'],
+    false
+  );
 
   const p = G.players[G.playerIdx];
   if (correct) p.score++;
