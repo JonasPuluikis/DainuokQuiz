@@ -705,6 +705,10 @@
       <div class="btn-center" id="row-next" style="display:none">
         <button class="btn btn-accent btn-lg" onclick="nextRound()">Kitas ratas →</button>
       </div>
+      <!-- Skip: always during clip/timer -->
+      <div class="btn-center" id="row-skip" style="display:none">
+        <button class="btn btn-ghost btn-md" onclick="skipSong()">⏭ Praleisti dainą</button>
+      </div>
     </div>
 
   </div>
@@ -741,12 +745,12 @@ const G = {
 
 /* ── PHASE CONFIG ──────────────────────── */
 const PHASES = {
-  idle:      { replay:false, reveal:false, judge:false, next:false, timer:false },
-  clip:      { replay:true,  reveal:false, judge:false, next:false, timer:false },
-  timer:     { replay:true,  reveal:true,  judge:false, next:false, timer:true  },
-  revealing: { replay:false, reveal:false, judge:false, next:false, timer:false },
-  judging:   { replay:false, reveal:false, judge:true,  next:false, timer:false },
-  scored:    { replay:false, reveal:false, judge:false, next:true,  timer:false },
+  idle:      { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
+  clip:      { replay:true,  reveal:false, skip:true,  judge:false, next:false, timer:false },
+  timer:     { replay:true,  reveal:true,  skip:true,  judge:false, next:false, timer:true  },
+  revealing: { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
+  judging:   { replay:false, reveal:false, skip:false, judge:true,  next:false, timer:false },
+  scored:    { replay:false, reveal:false, skip:false, judge:false, next:true,  timer:false },
 };
 
 function setPhase(p) {
@@ -765,6 +769,7 @@ function setPhase(p) {
   el('btn-reveal').disabled = !cfg.reveal;
   setVis('row-judge', cfg.judge);
   setVis('row-next',  cfg.next);
+  setVis('row-skip',  cfg.skip);
 
   const msgs = {
     clip:      '🎵 Klausyk atidžiai…',
@@ -999,6 +1004,15 @@ function nextRound() {
 
 function advanceSong() {
   G.songIdx++;
+  loadRound();
+}
+
+function skipSong() {
+  clearPoll();
+  clearTimer();
+  try { el('yt-player').src = 'about:blank'; } catch(_) {}
+  G.songIdx++;
+  setStatus('⏭ Daina praleista — kita daina tam pačiam žaidėjui…');
   loadRound();
 }
 
