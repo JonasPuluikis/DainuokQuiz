@@ -667,6 +667,48 @@
       font-size: .76rem; font-weight: 600; color: var(--text);
     }
 
+    /* tour selector */
+    .tour-grid {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    .tour-btn {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .75rem 1rem;
+      border-radius: 14px;
+      border: 2px solid var(--border);
+      background: rgba(18,18,42,.7);
+      color: var(--text);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform .15s cubic-bezier(.34,1.56,.64,1), border-color .15s, box-shadow .15s;
+      text-align: left;
+    }
+    .tour-btn .tour-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .tour-btn .tour-info { flex: 1; }
+    .tour-btn .tour-name { display: block; }
+    .tour-btn .tour-count { font-family: 'Poppins', sans-serif; font-size: .75rem; color: var(--muted); }
+    .tour-btn:hover { transform: translateX(4px) scale(1.01); }
+    .tour-btn.active-tour {
+      border-color: var(--orange);
+      background: rgba(255,140,0,.15);
+      box-shadow: 0 0 18px rgba(255,140,0,.3);
+    }
+
+    /* tour badge in game */
+    .tour-badge {
+      text-align: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: .85rem;
+      color: var(--orange);
+      letter-spacing: .05em;
+      padding: .2rem 0;
+    }
+
     /* ── Q&A QUESTION CARD ─────────────────────────── */
     .question-card {
       background: linear-gradient(135deg, rgba(18,18,42,.95), rgba(26,26,56,.95));
@@ -693,10 +735,12 @@
       color: #fff;
     }
     .answers-grid {
-      display: grid;
+      display: none;
       grid-template-columns: 1fr 1fr;
       gap: .55rem;
-      display: none;
+    }
+    .answers-grid.answers-3 .ans-btn:last-child {
+      grid-column: 1 / -1;
     }
     .ans-btn {
       display: flex;
@@ -790,6 +834,11 @@
       </div>
     </div>
 
+    <div class="card" id="tour-card" style="display:none">
+      <div class="card-label">Turas</div>
+      <div class="tour-grid" id="tour-grid"></div>
+    </div>
+
     <div class="card" id="cat-card">
       <div class="card-label">Kategorija</div>
       <div class="cat-grid">
@@ -851,8 +900,10 @@
       </div>
     </div>
 
+    <div class="tour-badge" id="tour-badge" style="display:none"></div>
+
     <div class="question-card" id="question-card">
-      <div class="q-label">Klausimas</div>
+      <div class="q-label" id="q-label">Klausimas</div>
       <div class="q-text" id="q-text"></div>
     </div>
 
@@ -915,7 +966,8 @@
 const G = {
   allSongs:   [],
   songs:      [],
-  allQs:      [],
+  allTours:   [],
+  tourId:     null,
   questions:  [],
   players:    [],
   playerIdx:  0,
@@ -976,7 +1028,11 @@ async function loadSongs() {
   try {
     const [sr, qr] = await Promise.all([fetch('songs.json'), fetch('questions.json')]);
     G.allSongs = sr.ok ? await sr.json() : [];
-    G.allQs    = qr.ok ? await qr.json() : [];
+    G.allTours = qr.ok ? await qr.json() : [];
+    if (G.allTours.length) {
+      G.tourId = G.allTours[0].id;
+      renderTourGrid();
+    }
     updateSongNote();
     checkStart();
   } catch (e) {
@@ -984,11 +1040,32 @@ async function loadSongs() {
   }
 }
 
+function renderTourGrid() {
+  el('tour-grid').innerHTML = G.allTours.map(t => {
+    const active = t.id === G.tourId ? ' active-tour' : '';
+    return `<button class="tour-btn${active}" onclick="selectTour('${t.id}')">
+      <span class="tour-icon">${t.emoji || '❓'}</span>
+      <span class="tour-info">
+        <span class="tour-name">${esc(t.name)}</span>
+        <span class="tour-count">${t.questions.length} klausimai</span>
+      </span>
+    </button>`;
+  }).join('');
+}
+
+function selectTour(id) {
+  G.tourId = id;
+  renderTourGrid();
+  updateSongNote();
+  checkStart();
+}
+
 function selectMode(mode) {
   G.mode = mode;
   el('mode-songs').className = 'mode-btn' + (mode === 'songs' ? ' active-songs' : '');
   el('mode-qa').className    = 'mode-btn' + (mode === 'qa'    ? ' active-qa'    : '');
-  el('cat-card').style.display = mode === 'songs' ? '' : 'none';
+  el('cat-card').style.display  = mode === 'songs' ? '' : 'none';
+  el('tour-card').style.display = mode === 'qa'    ? '' : 'none';
   updateSongNote();
   checkStart();
 }
@@ -1005,7 +1082,9 @@ function selectCat(cat) {
 
 function updateSongNote() {
   if (G.mode === 'qa') {
-    el('songs-note').textContent = `✅ ${G.allQs.length} klausimų paruošta`;
+    const tour = G.allTours.find(t => t.id === G.tourId);
+    const count = tour ? tour.questions.length : 0;
+    el('songs-note').textContent = `✅ ${count} klausimų paruošta`;
   } else {
     el('songs-note').textContent = `✅ ${filteredSongs().length} dainų paruošta`;
   }
@@ -1047,7 +1126,13 @@ function renderPlayerList() {
 }
 
 function checkStart() {
-  const ready = G.mode === 'qa' ? G.allQs.length > 0 : filteredSongs().length > 0;
+  let ready;
+  if (G.mode === 'qa') {
+    const tour = G.allTours.find(t => t.id === G.tourId);
+    ready = tour && tour.questions.length > 0;
+  } else {
+    ready = filteredSongs().length > 0;
+  }
   el('btn-start').disabled = G.players.length < 2 || !ready;
 }
 
@@ -1058,7 +1143,13 @@ function startGame() {
   G.round     = 1;
   G.players.forEach(p => p.score = 0);
 
-  const pool = G.mode === 'qa' ? [...G.allQs] : [...filteredSongs()];
+  let pool;
+  if (G.mode === 'qa') {
+    const tour = G.allTours.find(t => t.id === G.tourId) || G.allTours[0];
+    pool = [...(tour ? tour.questions : [])];
+  } else {
+    pool = [...filteredSongs()];
+  }
   for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [pool[i], pool[j]] = [pool[j], pool[i]];
@@ -1109,11 +1200,13 @@ function loadRound() {
 
   clearTimeout(clipTimer);
 
-  el('song-reveal').style.display  = 'none';
-  el('lyrics-box').style.display   = 'none';
+  el('song-reveal').style.display   = 'none';
+  el('lyrics-box').style.display    = 'none';
   el('question-card').style.display = 'none';
   el('answers-grid').style.display  = 'none';
+  el('tour-badge').style.display    = 'none';
   el('video-wrap').style.display    = '';
+  el('btn-reveal').textContent      = '🎵 Atskleisti atsakymą';
   el('turn-label').innerHTML = `<span class="pname">${esc(player.name)}</span> žaidžia`;
   el('round-pill').textContent = `Ratas ${G.round}`;
   renderScoreboard();
@@ -1131,6 +1224,7 @@ function loadRound() {
 function loadQARound() {
   const q      = G.questions[G.songIdx % G.questions.length];
   const player = G.players[G.playerIdx];
+  const tour   = G.allTours.find(t => t.id === G.tourId);
 
   el('video-wrap').style.display    = 'none';
   el('song-reveal').style.display   = 'none';
@@ -1141,15 +1235,24 @@ function loadQARound() {
   el('round-pill').textContent = `Ratas ${G.round}`;
   renderScoreboard();
 
-  el('q-text').textContent = q.question;
+  if (tour) {
+    el('tour-badge').textContent = `${tour.emoji || '❓'} ${tour.name} — ${G.songIdx % G.questions.length + 1} / ${G.questions.length}`;
+    el('tour-badge').style.display = '';
+  }
+
+  el('q-label').textContent = `Klausimas ${G.songIdx % G.questions.length + 1}`;
+  el('q-text').textContent  = q.question;
 
   const letters = ['A', 'B', 'C', 'D'];
-  el('answers-grid').innerHTML = q.answers.map((a, i) =>
+  const grid    = el('answers-grid');
+  grid.className = `answers-grid answers-${q.answers.length}`;
+  grid.innerHTML = q.answers.map((a, i) =>
     `<div class="ans-btn" id="ans-${i}">
       <span class="ans-letter">${letters[i]}</span>${esc(a)}
     </div>`
   ).join('');
 
+  el('btn-reveal').textContent = '✅ Atskleisti atsakymą';
   setPhase('qa-question');
   setStatus('💭 Žaidėjai spėja atsakymą…');
 }

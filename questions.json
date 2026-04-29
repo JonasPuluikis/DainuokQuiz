@@ -1,152 +1,33 @@
 [
   {
-    "id": 1,
-    "question": "Kokia yra Lietuvos sostinė?",
-    "answers": ["Kaunas", "Vilnius", "Klaipėda", "Šiauliai"],
-    "correct": 1
-  },
-  {
-    "id": 2,
-    "question": "Kiek planetų yra Saulės sistemoje?",
-    "answers": ["7", "8", "9", "10"],
-    "correct": 1
-  },
-  {
-    "id": 3,
-    "question": "Kas parašė „Romeo ir Džiuljetą"?",
-    "answers": ["Čarlzas Dikensas", "Džonas Miltonas", "Viljamas Šekspyras", "Džekas Londonas"],
-    "correct": 2
-  },
-  {
-    "id": 4,
-    "question": "Koks gyvūnas yra greičiausias sausumoje?",
-    "answers": ["Liūtas", "Gepardas", "Arklys", "Antilopė"],
-    "correct": 1
-  },
-  {
-    "id": 5,
-    "question": "Kokia šalis turi daugiausiai gyventojų pasaulyje?",
-    "answers": ["Indija", "JAV", "Kinija", "Rusija"],
-    "correct": 0
-  },
-  {
-    "id": 6,
-    "question": "Kiek centimetrų yra viename metre?",
-    "answers": ["10", "1000", "100", "50"],
-    "correct": 2
-  },
-  {
-    "id": 7,
-    "question": "Kuris miestas vadinamas „Amžinuoju miestu"?",
-    "answers": ["Paryžius", "Roma", "Atėnai", "Londonas"],
-    "correct": 1
-  },
-  {
-    "id": 8,
-    "question": "Kiek spalvų yra vaivorykštėje?",
-    "answers": ["5", "6", "8", "7"],
-    "correct": 3
-  },
-  {
-    "id": 9,
-    "question": "Kas sukūrė „Mona Lizą"?",
-    "answers": ["Mikelandželas", "Rafaelis", "Leonardo da Vinci", "Pikasas"],
-    "correct": 2
-  },
-  {
-    "id": 10,
-    "question": "Koks yra didžiausias vandenynas?",
-    "answers": ["Atlanto", "Indijos", "Arkties", "Ramusis"],
-    "correct": 3
-  },
-  {
-    "id": 11,
-    "question": "Kurioje šalyje yra Eifelio bokštas?",
-    "answers": ["Italijoje", "Ispanijoje", "Prancūzijoje", "Belgijoje"],
-    "correct": 2
-  },
-  {
-    "id": 12,
-    "question": "Kiek minučių yra viename valandoje?",
-    "answers": ["30", "100", "45", "60"],
-    "correct": 3
-  },
-  {
-    "id": 13,
-    "question": "Koks metų laikas ateina po žiemos?",
-    "answers": ["Ruduo", "Vasara", "Pavasaris", "Vėl žiema"],
-    "correct": 2
-  },
-  {
-    "id": 14,
-    "question": "Iš kur kilęs Kalėdų Senelis pagal tradiciją?",
-    "answers": ["Suomija", "Norvegija", "Islandija", "Švedija"],
-    "correct": 0
-  },
-  {
-    "id": 15,
-    "question": "Koks yra greičiausias žmogaus sukurtas transportas?",
-    "answers": ["Lėktuvas", "Raketinis lėktuvas", "Traukinys", "Greituolis"],
-    "correct": 1
-  },
-  {
-    "id": 16,
-    "question": "Kiek akių turi normalus voras?",
-    "answers": ["2", "4", "6", "8"],
-    "correct": 3
-  },
-  {
-    "id": 17,
-    "question": "Kokia spalva gaunama maišant raudoną ir mėlyną?",
-    "answers": ["Oranžinė", "Žalia", "Violetinė", "Ruda"],
-    "correct": 2
-  },
-  {
-    "id": 18,
-    "question": "Kiek Lietuvos nepriklausomybės dieną kovo mėnesio dieną?",
-    "answers": ["16", "11", "1", "11"],
-    "correct": 2
-  },
-  {
-    "id": 19,
-    "question": "Kas yra Žemės palydovas?",
-    "answers": ["Marsas", "Venera", "Mėnulis", "Jupiteris"],
-    "correct": 2
-  },
-  {
-    "id": 20,
-    "question": "Kiek kojų turi voras?",
-    "answers": ["6", "10", "4", "8"],
-    "correct": 3
-  },
-  {
-    "id": 21,
-    "question": "Kuris žaidimas yra populiariausias pasaulyje?",
-    "answers": ["Krepšinis", "Tenisas", "Futbolas", "Beisbolas"],
-    "correct": 2
-  },
-  {
-    "id": 22,
-    "question": "Kas yra kaltas dėl klimato kaitos?",
-    "answers": ["Gyvūnai", "Augalai", "Žmonės", "Saulė"],
-    "correct": 2
-  },
-  {
-    "id": 23,
-    "question": "Koks yra Lietuvos himnas?",
-    "answers": ["Tautiška giesmė", "Lietuva brangi", "Ant kalno karklai", "Kur bėga Šešupė"],
-    "correct": 0
-  },
-  {
-    "id": 24,
-    "question": "Kiek šalių yra Europos Sąjungoje (2024)?",
-    "answers": ["25", "30", "27", "28"],
-    "correct": 2
-  },
-  {
-    "id": 25,
-    "question": "Koks gyvūnas yra Lietuvos simbolis?",
-    "answers": ["Vilkas", "Gandras", "Briedis", "Erelis"],
-    "correct": 1
+    "id": "apsilimas",
+    "name": "Apšilimas",
+    "emoji": "🔥",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Koks mano mėgstamiausias alkoholinis gėrimas?",
+        "answers": ["Vynas", "Alus", "Sidras"],
+        "correct": 1
+      },
+      {
+        "id": 2,
+        "question": "Koks buvo pirmo mano šuns vardas?",
+        "answers": ["Rexas", "Džiupis", "Lordas", "Čipsas"],
+        "correct": 1
+      },
+      {
+        "id": 3,
+        "question": "Ko aš kategoriškai nemėgstu?",
+        "answers": ["Kmynų", "Žmonių", "BC Žalgirio"],
+        "correct": 0
+      },
+      {
+        "id": 4,
+        "question": "Ką aš dievinu (gal net per daug)?",
+        "answers": ["Saldainius", "Žirnelius", "Bulvytes fri", "Kebabus"],
+        "correct": 1
+      }
+    ]
   }
 ]
