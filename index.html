@@ -76,6 +76,12 @@
       92%  { opacity: .3; }
       100% { transform: translateY(-115vh) rotate(360deg) scale(.9); opacity: 0; }
     }
+    @keyframes floatText {
+      0%   { transform: translateY(0)      scale(1);    opacity: 0; }
+      8%   { opacity: 1; }
+      90%  { opacity: .85; }
+      100% { transform: translateY(-110vh) scale(1.05); opacity: 0; }
+    }
 
     /* ── SCREENS ────────────────────────────────────── */
     .screen { display: none; }
@@ -905,7 +911,7 @@ function spawnFloaters(emojis, phrases, isCorrect) {
       + `pointer-events:none;z-index:200;opacity:0;white-space:nowrap;`
       + `background:${bg};color:#fff;padding:.22rem .75rem;border-radius:99px;`
       + `box-shadow:0 3px 14px rgba(0,0,0,.35);`
-      + `animation:floatNote ${dur}s linear ${delay}s both;`;
+      + `animation:floatText ${dur}s ease-out ${delay}s both;`;
     document.body.appendChild(s);
     s.addEventListener('animationend', () => s.remove());
   });
