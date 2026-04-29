@@ -736,7 +736,7 @@ function setPhase(p) {
 
   setVis('btn-replay', cfg.replay);
   setVis('btn-reveal', cfg.reveal);
-  el('btn-reveal').disabled = !cfg.reveal;
+  el('btn-reveal').disabled = (p === 'timer') || !cfg.reveal;
   setVis('row-judge', cfg.judge);
   setVis('row-next',  cfg.next);
 
@@ -989,7 +989,10 @@ function startTimer() {
   G.timerIv = setInterval(() => {
     G.timerVal = Math.max(0, G.timerVal - 1);
     tickTimer();
-    if (G.timerVal === 0) clearTimer();
+    if (G.timerVal === 0) {
+      clearTimer();
+      if (G.phase === 'timer') el('btn-reveal').disabled = false;
+    }
   }, 1000);
 }
 
