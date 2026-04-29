@@ -874,7 +874,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="players-card">
       <div class="card-label">Pridėti žaidėjus (min. 2)</div>
       <div class="add-row">
         <input type="text" id="name-input" placeholder="Žaidėjo vardas…" maxlength="24" autocomplete="off" />
@@ -883,7 +883,7 @@
       <div class="player-list" id="player-list"></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="winscore-card">
       <div class="card-label">Pergalės sąlyga</div>
       <div class="winscore-row">
         <label for="win-score">Pirmasis surinkęs šį balų skaičių laimi:</label>
@@ -892,7 +892,7 @@
     </div>
 
     <button class="btn btn-accent btn-lg btn-full" id="btn-start" onclick="startGame()" disabled>
-      ▶ Pradėti žaidimą
+      ► Pradėti žaidimą
     </button>
     <p class="songs-note" id="songs-note">Kraunamos dainos…</p>
   </div>
@@ -954,9 +954,13 @@
         <button class="btn btn-green btn-lg" onclick="markAnswer(true)">Teisingai ✅</button>
         <button class="btn btn-red   btn-lg" onclick="markAnswer(false)">Neteisingai ❌</button>
       </div>
-      <!-- Step 5: next -->
+      <!-- Step 5: next (songs) -->
       <div class="btn-center" id="row-next" style="display:none">
         <button class="btn btn-accent btn-lg" onclick="nextRound()">Kitas ratas →</button>
+      </div>
+      <!-- Step 5: next (Q&A) -->
+      <div class="btn-center" id="row-next-qa" style="display:none">
+        <button class="btn btn-accent btn-lg" id="btn-next-qa" onclick="nextQA()">Kitas klausimas →</button>
       </div>
       <!-- Skip: always during clip/timer -->
       <div class="btn-center" id="row-skip" style="display:none">
@@ -1060,7 +1064,10 @@ function selectMode(mode) {
   G.mode = mode;
   el('mode-songs').className = 'mode-btn' + (mode === 'songs' ? ' active-songs' : '');
   el('mode-qa').className    = 'mode-btn' + (mode === 'qa'    ? ' active-qa'    : '');
-  el('cat-card').style.display = mode === 'songs' ? '' : 'none';
+  el('cat-card').style.display      = mode === 'songs' ? '' : 'none';
+  el('players-card').style.display  = mode === 'songs' ? '' : 'none';
+  el('winscore-card').style.display = mode === 'songs' ? '' : 'none';
+  el('btn-start').textContent = mode === 'qa' ? '► Pradėti viktoriną' : '► Pradėti žaidimą';
   updateSongNote();
   checkStart();
 }
@@ -1123,7 +1130,8 @@ function checkStart() {
   const ready = G.mode === 'qa'
     ? G.allTours.reduce((s, t) => s + t.questions.length, 0) > 0
     : filteredSongs().length > 0;
-  el('btn-start').disabled = G.players.length < 2 || !ready;
+  const playersOk = G.mode === 'qa' || G.players.length >= 2;
+  el('btn-start').disabled = !ready || !playersOk;
 }
 
 function startGame() {
@@ -1207,6 +1215,7 @@ function loadRound() {
   el('answers-grid').style.display  = 'none';
   el('tour-badge').style.display    = 'none';
   el('video-wrap').style.display    = '';
+  el('sb').style.display            = '';
   el('btn-reveal').textContent      = '🎵 Atskleisti atsakymą';
   el('turn-label').innerHTML = `<span class="pname">${esc(player.name)}</span> žaidžia`;
   el('round-pill').textContent = `Ratas ${G.round}`;
@@ -1232,9 +1241,11 @@ function loadQARound() {
   el('lyrics-box').style.display    = 'none';
   el('question-card').style.display = '';
   el('answers-grid').style.display  = 'grid';
-  el('turn-label').innerHTML = `<span class="pname">${esc(player.name)}</span> žaidžia`;
-  el('round-pill').textContent = `Ratas ${G.round}`;
-  renderScoreboard();
+  el('sb').style.display            = 'none';
+  el('row-next-qa').style.display   = 'none';
+  const qNum = G.songIdx % G.questions.length + 1;
+  el('turn-label').innerHTML = `<span class="pname">Klausimas ${qNum}</span> iš ${G.questions.length}`;
+  el('round-pill').textContent = tour.name || '';
 
   if (tour) {
     el('tour-badge').textContent = `${tour.emoji || '❓'} ${tour.name} — ${G.songIdx % G.questions.length + 1} / ${G.questions.length}`;
@@ -1284,7 +1295,8 @@ function revealQAnswer() {
 
   spawnFloaters(['✨','🎉','😮','🤯','😲'],['OMG','žinai mane!','tiksliai!','šokiruota','wow'], true);
 
-  setPhase('judging');
+  el('row-next-qa').style.display = '';
+  setPhase('scored');
   setStatus(`Teisingas atsakymas: ${correctLabel}`);
 }
 
@@ -1388,6 +1400,26 @@ function nextRound() {
   G.songIdx++;
   if (G.playerIdx === 0) G.round++;
   loadRound();
+}
+
+function nextQA() {
+  G.songIdx++;
+  if (G.songIdx >= G.questions.length) {
+    showQAFinished();
+  } else {
+    loadRound();
+  }
+}
+
+function showQAFinished() {
+  el('winner-name').textContent = 'Viktorina baigta!';
+  el('final-list').innerHTML =
+    `<div class="final-row is-winner" style="justify-content:center;font-size:1.1rem">
+       🎉 Visi ${G.questions.length} klausimai atsakyti!
+     </div>`;
+  el('winner-sub').textContent = 'Puikiai padirbėta!';
+  showScreen('winner');
+  runConfetti();
 }
 
 function advanceSong() {
