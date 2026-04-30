@@ -2130,14 +2130,24 @@ function runIntro() {
 
 function startIntro() {
   if (window._introStop) { window._introStop(); window._introStop = null; }
+
+  // Button click = confirmed user gesture — ensure music is running
+  if (!introACtx) {
+    initIntroAudio();
+  } else if (introACtx.state === 'suspended') {
+    introACtx.resume().then(() => {
+      if (introACtx && !introLoopId) loopGroove(introACtx.currentTime + 0.05);
+    });
+  } else if (!introLoopId) {
+    loopGroove(introACtx.currentTime + 0.05);
+  }
+
   const setup = el('setup');
-  setup.style.animation = 'none';   // skip fadeUp — reveal is via scroll
+  setup.style.animation = 'none';
   setup.classList.add('active');
   requestAnimationFrame(() => {
     setup.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setTimeout(() => { setup.style.animation = ''; }, 1000);
-    // intro stays in flow so the scroll target doesn't jump;
-    // showScreen('game') will remove its active class when the game starts
   });
 }
 
