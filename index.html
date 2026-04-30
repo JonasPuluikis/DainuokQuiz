@@ -1347,6 +1347,7 @@ function checkStart() {
 }
 
 function startGame() {
+  stopIntroMusic();
   G.winScore  = Math.min(20, Math.max(2, parseInt(el('win-score').value) || 5));
   G.playerIdx = 0;
   G.songIdx   = 0;
@@ -2129,7 +2130,6 @@ function runIntro() {
 
 function startIntro() {
   if (window._introStop) { window._introStop(); window._introStop = null; }
-  stopIntroMusic();
   const setup = el('setup');
   setup.style.animation = 'none';   // skip fadeUp — reveal is via scroll
   setup.classList.add('active');
