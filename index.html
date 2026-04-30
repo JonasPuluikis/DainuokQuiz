@@ -1590,16 +1590,21 @@ function spawnFloaters(emojis, phrases, isCorrect) {
 }
 
 function markAnswer(correct) {
-  if (correct) spawnFloaters(
-    ['😊','🎉','😄','🥳','✨','🌟','😁','🎊'],
-    ['žiaurus','maladec','tu kietas','gyvulys','važiuojam džesika','judi judi','afigenai'],
-    true
-  );
-  else spawnFloaters(
-    ['😢','😭','😞','💔','😩','😿','😔'],
-    ['ble nu kaip taip','pagarbos galima žaidimui?','susiimk','kas yra?','prastai','liudna','jopapa','nu nx'],
-    false
-  );
+  if (correct) {
+    playApplause();
+    spawnFloaters(
+      ['😊','🎉','😄','🥳','✨','🌟','😁','🎊'],
+      ['žiaurus','maladec','tu kietas','gyvulys','važiuojam džesika','judi judi','afigenai'],
+      true
+    );
+  } else {
+    playWrong();
+    spawnFloaters(
+      ['😢','😭','😞','💔','😩','😿','😔'],
+      ['ble nu kaip taip','pagarbos galima žaidimui?','susiimk','kas yra?','prastai','liudna','jopapa','nu nx'],
+      false
+    );
+  }
 
   const p = G.players[G.playerIdx];
   if (correct) p.score++;
@@ -1923,6 +1928,157 @@ function extractVid(url) {
 }
 
 /* ══════════════════════════════════════════
+   AUDIO ENGINE — intro music + sound FX
+══════════════════════════════════════════ */
+let introACtx = null, introLoopId = null;
+const IB = 60 / 118; // beat duration at 118 BPM
+
+// Bass line: [freq Hz, beat offset, duration beats]
+const BASS_SEQ = [
+  [98.0, 0,.45],[130.8,.5,.22],[146.8,.75,.22],
+  [174.6,1.5,.32],[98.0,2,.5],[116.5,2.5,.22],
+  [130.8,3.5,.22],[146.8,3.75,.22],
+  [98.0,4,.45],[146.8,4.5,.22],
+  [174.6,5.5,.32],[98.0,6,.55],[116.5,6.5,.22],[130.8,7.5,.42],
+];
+const GM7 = [196.0, 233.1, 293.7, 349.2]; // G3 Bb3 D4 F4
+
+function initIntroAudio() {
+  if (introACtx) return;
+  try { introACtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return; }
+
+  function tryStart() {
+    if (!introACtx || introLoopId) return;
+    if (introACtx.state === 'running') {
+      loopGroove(introACtx.currentTime + 0.05);
+    } else {
+      introACtx.resume().then(tryStart);
+    }
+  }
+  tryStart();
+  document.addEventListener('pointerdown', tryStart);
+  document.addEventListener('keydown',     tryStart);
+}
+
+function stopIntroMusic() {
+  clearTimeout(introLoopId); introLoopId = null;
+  if (introACtx) { introACtx.close().catch(()=>{}); introACtx = null; }
+}
+
+function loopGroove(t0) {
+  if (!introACtx) return;
+  renderGroove(t0);
+  const delay = Math.max(50, (t0 + 8*IB - introACtx.currentTime - 0.18) * 1000);
+  introLoopId = setTimeout(() => loopGroove(t0 + 8*IB), delay);
+}
+
+function renderGroove(t0) {
+  const ctx = introACtx; if (!ctx) return;
+  const vol = ctx.createGain(); vol.gain.value = 0.46; vol.connect(ctx.destination);
+
+  // Bass
+  for (const [f,b,d] of BASS_SEQ) {
+    const t = t0 + b*IB;
+    const o=ctx.createOscillator(), lpf=ctx.createBiquadFilter(), e=ctx.createGain();
+    o.type='sawtooth'; o.frequency.value=f;
+    lpf.type='lowpass'; lpf.frequency.value=380;
+    e.gain.setValueAtTime(0,t); e.gain.linearRampToValueAtTime(.72,t+.016);
+    e.gain.exponentialRampToValueAtTime(.001,t+d*IB);
+    o.connect(lpf); lpf.connect(e); e.connect(vol); o.start(t); o.stop(t+d*IB+.06);
+  }
+
+  // Chord stabs on every odd beat
+  for (const b of [1,3,5,7]) {
+    const t = t0 + b*IB;
+    for (const f of GM7) {
+      const o=ctx.createOscillator(), lpf=ctx.createBiquadFilter(), e=ctx.createGain();
+      o.type='square'; o.frequency.value=f;
+      lpf.type='lowpass'; lpf.frequency.value=1000;
+      e.gain.setValueAtTime(.18,t); e.gain.exponentialRampToValueAtTime(.001,t+.19);
+      o.connect(lpf); lpf.connect(e); e.connect(vol); o.start(t); o.stop(t+.23);
+    }
+  }
+
+  // Kick on beats 0 2 4 6
+  for (const b of [0,2,4,6]) {
+    const t=t0+b*IB, o=ctx.createOscillator(), e=ctx.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(145,t); o.frequency.exponentialRampToValueAtTime(38,t+.16);
+    e.gain.setValueAtTime(.75,t); e.gain.exponentialRampToValueAtTime(.001,t+.2);
+    o.connect(e); e.connect(vol); o.start(t); o.stop(t+.25);
+  }
+
+  // Snare on beats 1 3 5 7
+  for (const b of [1,3,5,7]) {
+    const t=t0+b*IB; noiseBurst(ctx,vol,t,.12,1800,.28);
+  }
+
+  // Hi-hat: 16th notes
+  for (let i=0;i<16;i++) {
+    noiseBurst(ctx,vol,t0+i*IB*.5,.032,9500,i%2===0?.10:.05);
+  }
+}
+
+function noiseBurst(ctx,dest,t,dur,hpfFreq,gain) {
+  const n=Math.ceil(ctx.sampleRate*dur);
+  const buf=ctx.createBuffer(1,n,ctx.sampleRate);
+  const d=buf.getChannelData(0); for(let i=0;i<n;i++) d[i]=Math.random()*2-1;
+  const src=ctx.createBufferSource(); src.buffer=buf;
+  const hpf=ctx.createBiquadFilter(); hpf.type='highpass'; hpf.frequency.value=hpfFreq;
+  const e=ctx.createGain(); e.gain.setValueAtTime(gain,t); e.gain.exponentialRampToValueAtTime(.001,t+dur);
+  src.connect(hpf); hpf.connect(e); e.connect(dest); src.start(t); src.stop(t+dur+.01);
+}
+
+// --- Sound FX ---
+let sfxCtx = null;
+function sfx() {
+  if (!sfxCtx || sfxCtx.state==='closed') sfxCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (sfxCtx.state==='suspended') sfxCtx.resume();
+  return sfxCtx;
+}
+
+function playApplause() {
+  const ctx=sfx();
+  const master=ctx.createGain(); master.gain.value=.72; master.connect(ctx.destination);
+  const dur=2.6, now=ctx.currentTime;
+
+  // Continuous crowd bed
+  const n=Math.ceil(ctx.sampleRate*dur);
+  const bbuf=ctx.createBuffer(2,n,ctx.sampleRate);
+  for(let c=0;c<2;c++){const d=bbuf.getChannelData(c); for(let i=0;i<n;i++) d[i]=(Math.random()*2-1)*Math.sin(i/n*Math.PI);}
+  const bsrc=ctx.createBufferSource(); bsrc.buffer=bbuf;
+  const bpf=ctx.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=2400; bpf.Q.value=.35;
+  const be=ctx.createGain();
+  be.gain.setValueAtTime(0,now); be.gain.linearRampToValueAtTime(.65,now+.18);
+  be.gain.setValueAtTime(.65,now+dur*.5); be.gain.exponentialRampToValueAtTime(.001,now+dur);
+  bsrc.connect(bpf); bpf.connect(be); be.connect(master); bsrc.start(now); bsrc.stop(now+dur+.1);
+
+  // Individual clap pops
+  for(let i=0;i<18;i++) {
+    const bDur=.055+Math.random()*.08, bStart=now+Math.random()*.85;
+    noiseBurst(ctx,master,bStart,bDur,1000+Math.random()*2200,.55+Math.random()*.5);
+  }
+}
+
+function playWrong() {
+  const ctx=sfx(), now=ctx.currentTime;
+  const master=ctx.createGain(); master.gain.value=.52; master.connect(ctx.destination);
+
+  // Descending sawtooth buzz
+  const o1=ctx.createOscillator(), e1=ctx.createGain();
+  o1.type='sawtooth';
+  o1.frequency.setValueAtTime(370,now); o1.frequency.exponentialRampToValueAtTime(95,now+.48);
+  e1.gain.setValueAtTime(.55,now); e1.gain.exponentialRampToValueAtTime(.001,now+.52);
+  o1.connect(e1); e1.connect(master); o1.start(now); o1.stop(now+.55);
+
+  // Low thud underneath
+  const o2=ctx.createOscillator(), e2=ctx.createGain();
+  o2.type='square'; o2.frequency.value=75;
+  e2.gain.setValueAtTime(0,now+.06); e2.gain.linearRampToValueAtTime(.35,now+.09);
+  e2.gain.exponentialRampToValueAtTime(.001,now+.44);
+  o2.connect(e2); e2.connect(master); o2.start(now+.06); o2.stop(now+.48);
+}
+
+/* ══════════════════════════════════════════
    INTRO
 ══════════════════════════════════════════ */
 function runIntro() {
@@ -1940,29 +2096,40 @@ function runIntro() {
     wrap.appendChild(s);
   }
 
-  const seq = [0, 1, 2, 3];
-  let cur = -1;
+  let cur = -1, running = true;
+  window._introStop = () => { running = false; };
 
-  function next() {
-    if (cur >= 0) {
-      const prev = el('iline-' + cur);
-      prev.classList.add('ihide');
-      setTimeout(() => prev.classList.remove('ishow', 'ihide'), 420);
-    }
-    cur++;
-    if (cur <= 2) {
+  function cycle() {
+    if (!running) return;
+    const prev = cur;
+    cur = (prev + 1) % 4;
+
+    const show = () => {
+      if (!running) return;
       el('iline-' + cur).classList.add('ishow');
-      setTimeout(next, 2600);
-    } else if (cur === 3) {
-      el('iline-3').classList.add('ishow');
-      setTimeout(() => el('intro-btn-wrap').classList.add('ishow'), 900);
+      if (cur === 3) {
+        setTimeout(() => { if (running) el('intro-btn-wrap').classList.add('ishow'); }, 520);
+      }
+      setTimeout(cycle, 2750);
+    };
+
+    if (prev >= 0) {
+      const pe = el('iline-' + prev);
+      pe.classList.add('ihide');
+      if (prev === 3) el('intro-btn-wrap').classList.remove('ishow');
+      setTimeout(() => { pe.classList.remove('ishow','ihide'); show(); }, 440);
+    } else {
+      show();
     }
   }
 
-  setTimeout(next, 500);
+  setTimeout(cycle, 500);
+  initIntroAudio();
 }
 
 function startIntro() {
+  if (window._introStop) { window._introStop(); window._introStop = null; }
+  stopIntroMusic();
   showScreen('setup');
 }
 
