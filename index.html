@@ -1294,6 +1294,7 @@ function revealQAnswer() {
 
   el('row-next-qa').style.display = '';
   setPhase('scored');
+  el('row-next').style.display = 'none';
   setStatus(`Teisingas atsakymas: ${correctLabel}`);
 }
 
