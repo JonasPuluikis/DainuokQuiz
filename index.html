@@ -2130,7 +2130,15 @@ function runIntro() {
 function startIntro() {
   if (window._introStop) { window._introStop(); window._introStop = null; }
   stopIntroMusic();
-  showScreen('setup');
+  const setup = el('setup');
+  setup.style.animation = 'none';   // skip fadeUp — reveal is via scroll
+  setup.classList.add('active');
+  requestAnimationFrame(() => {
+    setup.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => { setup.style.animation = ''; }, 1000);
+    // intro stays in flow so the scroll target doesn't jump;
+    // showScreen('game') will remove its active class when the game starts
+  });
 }
 
 /* ══════════════════════════════════════════
