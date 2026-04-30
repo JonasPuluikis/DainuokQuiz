@@ -1232,31 +1232,28 @@ function loadRound() {
 }
 
 function loadQARound() {
-  const q      = G.questions[G.songIdx % G.questions.length];
-  const player = G.players[G.playerIdx];
-  const tour   = { name: q.tourName, emoji: q.tourEmoji, type: q.tourType };
-
+  // Hide songs-mode elements unconditionally first
   el('video-wrap').style.display    = 'none';
   el('song-reveal').style.display   = 'none';
   el('lyrics-box').style.display    = 'none';
-  el('question-card').style.display = 'block';
-  el('answers-grid').style.display  = 'grid';
   el('sb').style.display            = 'none';
   el('row-next-qa').style.display   = 'none';
-  const qNum = G.songIdx % G.questions.length + 1;
-  el('turn-label').innerHTML = `<span class="pname">Klausimas ${qNum}</span> iš ${G.questions.length}`;
-  el('round-pill').textContent = tour.name || '';
+  el('question-card').style.display = 'block';
+  el('answers-grid').style.display  = 'grid';
 
-  if (tour) {
-    el('tour-badge').textContent = `${tour.emoji || '❓'} ${tour.name} — ${G.songIdx % G.questions.length + 1} / ${G.questions.length}`;
-    el('tour-badge').style.display = '';
-  }
+  const q = G.questions[G.songIdx];
+  if (!q) { setStatus('⚠️ Klaida: klausimas nerastas'); return; }
 
-  el('q-label').textContent = `Klausimas ${G.songIdx % G.questions.length + 1}`;
-  el('q-text').textContent  = q.question;
+  const qNum = G.songIdx + 1;
+  el('turn-label').innerHTML   = `<span class="pname">Klausimas ${qNum}</span> iš ${G.questions.length}`;
+  el('round-pill').textContent = q.tourName || '';
+  el('tour-badge').textContent = `${q.tourEmoji || '❓'} ${q.tourName} — ${qNum} / ${G.questions.length}`;
+  el('tour-badge').style.display = 'block';
+  el('q-label').textContent    = `Klausimas ${qNum}`;
+  el('q-text').textContent     = q.question;
 
   const grid = el('answers-grid');
-  if (tour && tour.type === 'truefalse') {
+  if (q.tourType === 'truefalse') {
     grid.className = 'answers-grid answers-tf';
     grid.innerHTML =
       `<div class="ans-btn tf-tiesa" id="ans-0"><span class="tf-icon"></span>Tiesa</div>
@@ -1277,7 +1274,7 @@ function loadQARound() {
 }
 
 function revealQAnswer() {
-  const q    = G.questions[G.songIdx % G.questions.length];
+  const q    = G.questions[G.songIdx];
   const isTF = q.tourType === 'truefalse';
 
   const count = isTF ? 2 : q.answers.length;
