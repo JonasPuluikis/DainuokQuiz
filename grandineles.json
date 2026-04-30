@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "items": [
+      { "word": "TORTAS", "type": "cake" },
+      { "word": "KORTAS", "type": "court" },
+      { "word": "KORTA",  "type": "cards" },
+      { "word": "KERTA",  "type": "chess" }
+    ]
+  }
+]

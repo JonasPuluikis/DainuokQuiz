@@ -807,6 +807,49 @@
     .ans-btn.tf-tiesa .tf-icon::before { content: '✅'; font-size: 1.8rem; display: block; margin-bottom: .2rem; }
     .ans-btn.tf-melas .tf-icon::before { content: '❌'; font-size: 1.8rem; display: block; margin-bottom: .2rem; }
 
+    /* ── CHAIN MODE ─────────────────────────────────── */
+    .mode-btn-full { grid-column: 1 / -1; }
+    .mode-btn.active-chain {
+      border-color: #00e5ff;
+      background: rgba(0,229,255,.15);
+      box-shadow: 0 0 18px rgba(0,229,255,.4);
+    }
+    .chain-game {
+      display: none;
+      width: 100%;
+    }
+    .chain-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .7rem;
+      margin-bottom: .6rem;
+    }
+    .chain-card {
+      background: rgba(18,18,42,.8);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .chain-img-wrap {
+      width: 100%;
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .chain-word {
+      padding: .45rem .3rem;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(.8rem, 2.2vw, 1.05rem);
+      letter-spacing: .08em;
+      text-align: center;
+      color: var(--text);
+      visibility: hidden;
+      min-height: 2rem;
+    }
+    .chain-word.revealed { visibility: visible; }
+
     /* ── MOBILE ─────────────────────────────────────── */
     @media (max-width: 580px) {
       .logo h1 { font-size: 2.1rem; }
@@ -814,6 +857,7 @@
       .winner-trophy { font-size: 4rem; }
       .timer-num { font-size: 3.2rem; }
       .topbar { flex-wrap: wrap; }
+      .chain-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -855,6 +899,9 @@
         </button>
         <button class="mode-btn" id="mode-qa" onclick="selectMode('qa')">
           <span class="mode-icon">❓</span>Klausimai ir atsakymai
+        </button>
+        <button class="mode-btn mode-btn-full" id="mode-grandinele" onclick="selectMode('grandinele')">
+          <span class="mode-icon">🔗</span>Grandinėlė
         </button>
       </div>
     </div>
@@ -941,6 +988,10 @@
 
     <div class="lyrics-box" id="lyrics-box"></div>
 
+    <div id="chain-game" class="chain-game">
+      <div class="chain-grid" id="chain-grid"></div>
+    </div>
+
     <div class="status-bar" id="status-bar">Preparing…</div>
 
     <div class="actions">
@@ -961,6 +1012,10 @@
       <!-- Step 5: next (Q&A) -->
       <div class="btn-center" id="row-next-qa" style="display:none">
         <button class="btn btn-accent btn-lg" id="btn-next-qa" onclick="nextQA()">Kitas klausimas →</button>
+      </div>
+      <!-- Step 5: next (chain) -->
+      <div class="btn-center" id="row-next-chain" style="display:none">
+        <button class="btn btn-accent btn-lg" onclick="nextChain()">Kita grandinėlė →</button>
       </div>
       <!-- Skip: always during clip/timer -->
       <div class="btn-center" id="row-skip" style="display:none">
@@ -993,6 +1048,9 @@ const G = {
   allTours:   [],
   tourId:     null,
   questions:  [],
+  allChains:  [],
+  chains:     [],
+  chainIdx:   0,
   players:    [],
   playerIdx:  0,
   songIdx:    0,
@@ -1014,7 +1072,8 @@ const PHASES = {
   revealing:   { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
   judging:     { replay:false, reveal:false, skip:false, judge:true,  next:false, timer:false },
   scored:      { replay:false, reveal:false, skip:false, judge:false, next:true,  timer:false },
-  'qa-question':{ replay:false, reveal:true,  skip:false, judge:false, next:false, timer:true  },
+  'qa-question':   { replay:false, reveal:true,  skip:false, judge:false, next:false, timer:true  },
+  'chain-question':{ replay:false, reveal:true,  skip:false, judge:false, next:false, timer:false },
 };
 
 function setPhase(p) {
@@ -1028,6 +1087,7 @@ function setPhase(p) {
     el('timer-wrap').style.display = 'none';
   }
 
+  el('row-rr').style.display = (cfg.replay || cfg.reveal) ? '' : 'none';
   setVis('btn-replay', cfg.replay);
   setVis('btn-reveal', cfg.reveal);
   el('btn-reveal').disabled = !cfg.reveal;
@@ -1050,9 +1110,10 @@ function setPhase(p) {
 ══════════════════════════════════════════ */
 async function loadSongs() {
   try {
-    const [sr, qr] = await Promise.all([fetch('songs.json'), fetch('questions.json')]);
-    G.allSongs = sr.ok ? await sr.json() : [];
-    G.allTours = qr.ok ? await qr.json() : [];
+    const [sr, qr, cr] = await Promise.all([fetch('songs.json'), fetch('questions.json'), fetch('grandineles.json')]);
+    G.allSongs  = sr.ok ? await sr.json() : [];
+    G.allTours  = qr.ok ? await qr.json() : [];
+    G.allChains = cr.ok ? await cr.json() : [];
     updateSongNote();
     checkStart();
   } catch (e) {
@@ -1062,12 +1123,16 @@ async function loadSongs() {
 
 function selectMode(mode) {
   G.mode = mode;
-  el('mode-songs').className = 'mode-btn' + (mode === 'songs' ? ' active-songs' : '');
-  el('mode-qa').className    = 'mode-btn' + (mode === 'qa'    ? ' active-qa'    : '');
-  el('cat-card').style.display      = mode === 'songs' ? '' : 'none';
-  el('players-card').style.display  = mode === 'songs' ? '' : 'none';
-  el('winscore-card').style.display = mode === 'songs' ? '' : 'none';
-  el('btn-start').textContent = mode === 'qa' ? '► Pradėti viktoriną' : '► Pradėti žaidimą';
+  el('mode-songs').className      = 'mode-btn' + (mode === 'songs'      ? ' active-songs'      : '');
+  el('mode-qa').className         = 'mode-btn' + (mode === 'qa'         ? ' active-qa'         : '');
+  el('mode-grandinele').className = 'mode-btn mode-btn-full' + (mode === 'grandinele' ? ' active-chain' : '');
+  const songsOnly = mode === 'songs';
+  el('cat-card').style.display      = songsOnly ? '' : 'none';
+  el('players-card').style.display  = songsOnly ? '' : 'none';
+  el('winscore-card').style.display = songsOnly ? '' : 'none';
+  el('btn-start').textContent = mode === 'qa' ? '► Pradėti viktoriną'
+                              : mode === 'grandinele' ? '► Pradėti grandinėlę'
+                              : '► Pradėti žaidimą';
   updateSongNote();
   checkStart();
 }
@@ -1086,6 +1151,8 @@ function updateSongNote() {
   if (G.mode === 'qa') {
     const total = G.allTours.reduce((s, t) => s + t.questions.length, 0);
     el('songs-note').textContent = `✅ ${total} klausimų · ${G.allTours.length} turai`;
+  } else if (G.mode === 'grandinele') {
+    el('songs-note').textContent = `✅ ${G.allChains.length} grandinėlių paruošta`;
   } else {
     el('songs-note').textContent = `✅ ${filteredSongs().length} dainų paruošta`;
   }
@@ -1127,10 +1194,11 @@ function renderPlayerList() {
 }
 
 function checkStart() {
-  const ready = G.mode === 'qa'
-    ? G.allTours.reduce((s, t) => s + t.questions.length, 0) > 0
-    : filteredSongs().length > 0;
-  const playersOk = G.mode === 'qa' || G.players.length >= 2;
+  let ready;
+  if (G.mode === 'qa')         ready = G.allTours.reduce((s, t) => s + t.questions.length, 0) > 0;
+  else if (G.mode === 'grandinele') ready = G.allChains.length > 0;
+  else                         ready = filteredSongs().length > 0;
+  const playersOk = G.mode === 'qa' || G.mode === 'grandinele' || G.players.length >= 2;
   el('btn-start').disabled = !ready || !playersOk;
 }
 
@@ -1154,6 +1222,13 @@ function startGame() {
         answers:  q.answers || [],
       }))
     );
+  } else if (G.mode === 'grandinele') {
+    G.chains   = [...G.allChains];
+    G.chainIdx = 0;
+    G.songs = []; G.questions = [];
+    showScreen('game');
+    loadChainRound();
+    return;
   } else {
     pool = [...filteredSongs()];
   }
@@ -1201,7 +1276,8 @@ function playSegment(videoId, startSec, endSec, onEnd) {
    ROUND LIFECYCLE
 ══════════════════════════════════════════ */
 function loadRound() {
-  if (G.mode === 'qa') { loadQARound(); return; }
+  if (G.mode === 'qa')         { loadQARound();    return; }
+  if (G.mode === 'grandinele') { loadChainRound(); return; }
 
   const song   = G.songs[G.songIdx % G.songs.length];
   const player = G.players[G.playerIdx];
@@ -1214,6 +1290,8 @@ function loadRound() {
   el('question-card').style.display = 'none';
   el('answers-grid').style.display  = 'none';
   el('tour-badge').style.display    = 'none';
+  el('chain-game').style.display    = 'none';
+  el('row-next-chain').style.display = 'none';
   el('video-wrap').style.display    = '';
   el('sb').style.display            = '';
   el('btn-reveal').textContent      = '🎵 Atskleisti atsakymą';
@@ -1237,6 +1315,8 @@ function loadQARound() {
   el('song-reveal').style.display   = 'none';
   el('lyrics-box').style.display    = 'none';
   el('sb').style.display            = 'none';
+  el('chain-game').style.display    = 'none';
+  el('row-next-chain').style.display = 'none';
   el('row-next-qa').style.display   = 'none';
   el('question-card').style.display = 'block';
   el('answers-grid').style.display  = 'grid';
@@ -1312,7 +1392,8 @@ function replayClip() {
 }
 
 function revealAnswer() {
-  if (G.mode === 'qa') { revealQAnswer(); return; }
+  if (G.mode === 'qa')         { revealQAnswer(); return; }
+  if (G.mode === 'grandinele') { revealChain();   return; }
   const song = G.songs[G.songIdx % G.songs.length];
   const vid  = extractVid(song.youtubeUrl);
 
@@ -1433,6 +1514,98 @@ function skipSong() {
   G.songIdx++;
   setStatus('⏭ Daina praleista — kita daina tam pačiam žaidėjui…');
   loadRound();
+}
+
+/* ══════════════════════════════════════════
+   CHAIN MODE
+══════════════════════════════════════════ */
+const CHAIN_IMGS = {
+  cake: `<div style="background:linear-gradient(135deg,#f093fb,#f5576c);width:100%;height:100%;display:flex;align-items:center;justify-content:center"><span style="font-size:min(3.5rem,10vw)">🎂</span></div>`,
+  court: `<div style="background:linear-gradient(135deg,#4e8d47,#76c442);width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:12%;box-sizing:border-box">
+    <div style="width:100%;height:100%;border:3px solid rgba(255,255,255,.9);border-radius:3px;position:relative;box-sizing:border-box">
+      <div style="position:absolute;left:50%;top:0;bottom:0;border-left:3px solid rgba(255,255,255,.9)"></div>
+      <div style="position:absolute;top:30%;left:0;right:0;border-top:2px solid rgba(255,255,255,.6)"></div>
+      <div style="position:absolute;bottom:30%;left:0;right:0;border-bottom:2px solid rgba(255,255,255,.6)"></div>
+    </div>
+  </div>`,
+  cards: `<div style="background:linear-gradient(135deg,#134e5e,#71b280);width:100%;height:100%;display:flex;align-items:center;justify-content:center;position:relative">
+    <div style="position:absolute;width:42%;height:60%;background:white;border-radius:6px;box-shadow:2px 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:min(1.6rem,5vw);left:12%;top:18%;transform:rotate(-14deg)">♠</div>
+    <div style="position:absolute;width:42%;height:60%;background:white;border-radius:6px;box-shadow:2px 2px 8px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font-size:min(1.6rem,5vw);color:#e33;right:12%;top:18%;transform:rotate(10deg)">♥</div>
+  </div>`,
+  chess: `<div style="background:linear-gradient(135deg,#373b44,#4286f4);width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+    <div style="display:grid;grid-template-columns:1fr 1fr;width:60%;height:60%;border:2px solid rgba(255,255,255,.25);box-sizing:border-box">
+      <div style="background:#f0d9b5;display:flex;align-items:center;justify-content:center;font-size:min(1.5rem,4.5vw)">♛</div>
+      <div style="background:#b58863;display:flex;align-items:center;justify-content:center;font-size:min(1rem,3.5vw);color:rgba(255,255,255,.85)">✕</div>
+      <div style="background:#b58863;display:flex;align-items:center;justify-content:center;font-size:min(1.5rem,4.5vw)">♟</div>
+      <div style="background:#f0d9b5"></div>
+    </div>
+  </div>`,
+};
+
+function loadChainRound() {
+  el('video-wrap').style.display    = 'none';
+  el('song-reveal').style.display   = 'none';
+  el('lyrics-box').style.display    = 'none';
+  el('sb').style.display            = 'none';
+  el('question-card').style.display = 'none';
+  el('answers-grid').style.display  = 'none';
+  el('tour-badge').style.display    = 'none';
+  el('row-next').style.display      = 'none';
+  el('row-next-qa').style.display   = 'none';
+  el('row-next-chain').style.display = 'none';
+  el('chain-game').style.display    = 'block';
+
+  const chain = G.chains[G.chainIdx];
+  const total = G.chains.length;
+  el('turn-label').innerHTML  = `<span class="pname">Grandinėlė ${G.chainIdx + 1}</span> iš ${total}`;
+  el('round-pill').textContent = '🔗 Grandinėlė';
+
+  const grid = el('chain-grid');
+  grid.innerHTML = chain.items.map((item, i) =>
+    `<div class="chain-card">
+      <div class="chain-img-wrap">${CHAIN_IMGS[item.type] || ''}</div>
+      <div class="chain-word" id="chain-word-${i}">${esc(item.word)}</div>
+    </div>`
+  ).join('');
+
+  el('btn-reveal').textContent = '🔗 Atskleisti žodžius';
+  setPhase('chain-question');
+  setStatus('💭 Atspėkite žodžius pagal nuotraukas!');
+}
+
+function revealChain() {
+  const chain = G.chains[G.chainIdx];
+  chain.items.forEach((_, i) => {
+    const w = el('chain-word-' + i);
+    if (w) w.classList.add('revealed');
+  });
+
+  spawnFloaters(['🔗','✨','🎉','😮'],['grandinėlė!','žinai!','wow','tiksliai!'], true);
+
+  setVis('row-rr', false);
+  el('row-next-chain').style.display = 'block';
+
+  const lastOne = G.chainIdx >= G.chains.length - 1;
+  const nextBtn = el('row-next-chain').querySelector('button');
+  nextBtn.textContent = lastOne ? 'Baigti žaidimą ✓' : 'Kita grandinėlė →';
+
+  setStatus('✅ Teisingi atsakymai atskleisti!');
+}
+
+function nextChain() {
+  G.chainIdx++;
+  if (G.chainIdx >= G.chains.length) {
+    el('winner-name').textContent = 'Grandinėlė baigta!';
+    el('final-list').innerHTML =
+      `<div class="final-row is-winner" style="justify-content:center;font-size:1.1rem">
+         🔗 Visos ${G.chains.length} grandinėlės atskleistos!
+       </div>`;
+    el('winner-sub').textContent = 'Puikiai padirbėta!';
+    showScreen('winner');
+    runConfetti();
+  } else {
+    loadChainRound();
+  }
 }
 
 function checkWinner() {
