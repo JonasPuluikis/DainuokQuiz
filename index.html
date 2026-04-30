@@ -807,6 +807,133 @@
     .ans-btn.tf-tiesa .tf-icon::before { content: '✅'; font-size: 1.8rem; display: block; margin-bottom: .2rem; }
     .ans-btn.tf-melas .tf-icon::before { content: '❌'; font-size: 1.8rem; display: block; margin-bottom: .2rem; }
 
+    /* ── INTRO SCREEN ───────────────────────────────── */
+    #intro {
+      background: #04040c;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .intro-bg-pulse {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 50%, rgba(131,56,236,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 55% 75% at 15% 85%, rgba(255,58,92,.12) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 75% at 85% 15%, rgba(0,229,255,.10) 0%, transparent 60%);
+      animation: iGlow 3.5s ease-in-out infinite alternate;
+    }
+    @keyframes iGlow {
+      from { opacity: .5; transform: scale(1); }
+      to   { opacity: 1;  transform: scale(1.05); }
+    }
+    .intro-emojis {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .ie {
+      position: absolute;
+      font-size: var(--s);
+      animation: iFloat var(--dur) linear var(--d) infinite;
+      opacity: 0;
+    }
+    @keyframes iFloat {
+      0%   { transform: translateY(105vh) rotate(0deg)   scale(.8); opacity: 0; }
+      8%   { opacity: .85; }
+      90%  { opacity: .85; }
+      100% { transform: translateY(-12vh)  rotate(400deg) scale(1.1); opacity: 0; }
+    }
+    .intro-content {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    .intro-text-stage {
+      position: relative;
+      width: 100%;
+      min-height: clamp(160px, 28vw, 280px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .iline {
+      position: absolute;
+      width: 90%;
+      max-width: 820px;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 7.5vw, 5.5rem);
+      line-height: 1.2;
+      text-align: center;
+      opacity: 0;
+      transform: scale(.8) translateY(40px);
+      transition: opacity .55s ease, transform .55s cubic-bezier(.34,1.56,.64,1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 300% 300%;
+      animation: gradShift 3s linear infinite;
+      pointer-events: none;
+    }
+    .iline.ishow {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    .iline.ihide {
+      opacity: 0;
+      transform: scale(1.1) translateY(-35px);
+      transition: opacity .38s ease, transform .38s ease;
+    }
+    .iline-1 { background-image: linear-gradient(120deg, #ff6b6b, #feca57, #ff9f43, #ff6b6b); }
+    .iline-2 { background-image: linear-gradient(120deg, #a29bfe, #fd79a8, #e17055, #a29bfe); }
+    .iline-3 { background-image: linear-gradient(120deg, #00cec9, #55efc4, #6c5ce7, #00cec9); font-size: clamp(1.6rem, 5.5vw, 4rem); }
+    .iline-4 { background-image: linear-gradient(120deg, #ffeaa7, #fdcb6e, #fd79a8, #ffeaa7); font-size: clamp(1.3rem, 4vw,   3rem); }
+    @keyframes gradShift {
+      0%   { background-position: 0%   50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0%   50%; }
+    }
+    .intro-btn-wrap {
+      margin-top: 2.5rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s cubic-bezier(.34,1.56,.64,1);
+    }
+    .intro-btn-wrap.ishow {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .btn-intro {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+      padding: .9rem 3.8rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b, #8b5cf6);
+      background-size: 300%;
+      color: #fff;
+      cursor: pointer;
+      letter-spacing: .04em;
+      animation: btnPulse 2.5s ease-in-out infinite;
+      box-shadow: 0 0 32px rgba(139,92,246,.65), 0 0 70px rgba(236,72,153,.3);
+    }
+    .btn-intro:hover { transform: scale(1.07); }
+    @keyframes btnPulse {
+      0%,100% { background-position:  0% 50%; box-shadow: 0 0 32px rgba(139,92,246,.65), 0 0 70px rgba(236,72,153,.30); }
+      50%      { background-position: 100% 50%; box-shadow: 0 0 55px rgba(245,158,11,.75), 0 0 90px rgba(139,92,246,.45); }
+    }
+
     /* ── CHAIN MODE ─────────────────────────────────── */
     .mode-btn-full { grid-column: 1 / -1; }
     .mode-btn.active-chain {
@@ -878,13 +1005,30 @@
   <span style="--x:91%; --d:2.8s; --s:1.7rem; --dur:10s">🎵</span>
 </div>
 
+<!-- ════════════════ INTRO ════════════════ -->
+<div id="intro" class="screen active">
+  <div class="intro-bg-pulse"></div>
+  <div class="intro-emojis" id="intro-emojis"></div>
+  <div class="intro-content">
+    <div class="intro-text-stage">
+      <p class="iline iline-1" id="iline-0">Ar jūs pasiruošę? 🤔</p>
+      <p class="iline iline-2" id="iline-1">Ilgai laukėm, atėjo metas ⚡</p>
+      <p class="iline iline-3" id="iline-2">Klausiat kam?<br>Aš jum pasakysiu… 😏</p>
+      <p class="iline iline-4" id="iline-3">Paspausk „Pradėti" ir sužinosi ✨</p>
+    </div>
+    <div class="intro-btn-wrap" id="intro-btn-wrap">
+      <button class="btn-intro" onclick="startIntro()">► Pradėti</button>
+    </div>
+  </div>
+</div>
+
 <!-- ════════════════ SETUP ════════════════ -->
-<div id="setup" class="screen active">
+<div id="setup" class="screen">
   <div style="max-width:540px;margin:0 auto;padding:2.5rem 1rem 5rem">
     <div class="logo">
       <div class="logo-hero">
         <div class="logo-text">
-          <h1>🎵 Medos Dainų Viktorina</h1>
+          <h1>🧠 Auksiniai protai su Meda</h1>
           <p>Ar atspėsi, kas dainuojama toliau?</p>
         </div>
         <img src="meda.png" class="meda-img" alt="Meda" />
@@ -1779,9 +1923,54 @@ function extractVid(url) {
 }
 
 /* ══════════════════════════════════════════
+   INTRO
+══════════════════════════════════════════ */
+function runIntro() {
+  const emojis = ['🎉','🎊','✨','🔥','⚡','🌟','💫','🎵','🎶','🏆','🎯','💥','🌈','🦋','🎭','🎪','😱','🤯','🥳','🎸','👑','💎','🌙','⭐','🎆','🎇'];
+  const wrap = el('intro-emojis');
+  for (let i = 0; i < 34; i++) {
+    const s = document.createElement('span');
+    s.className = 'ie';
+    s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    s.style.cssText =
+      `left:${(Math.random()*98).toFixed(1)}%;`+
+      `--s:${(1.2 + Math.random()*2.8).toFixed(1)}rem;`+
+      `--dur:${(5 + Math.random()*7).toFixed(1)}s;`+
+      `--d:${(Math.random()*9).toFixed(1)}s;`;
+    wrap.appendChild(s);
+  }
+
+  const seq = [0, 1, 2, 3];
+  let cur = -1;
+
+  function next() {
+    if (cur >= 0) {
+      const prev = el('iline-' + cur);
+      prev.classList.add('ihide');
+      setTimeout(() => prev.classList.remove('ishow', 'ihide'), 420);
+    }
+    cur++;
+    if (cur <= 2) {
+      el('iline-' + cur).classList.add('ishow');
+      setTimeout(next, 2600);
+    } else if (cur === 3) {
+      el('iline-3').classList.add('ishow');
+      setTimeout(() => el('intro-btn-wrap').classList.add('ishow'), 900);
+    }
+  }
+
+  setTimeout(next, 500);
+}
+
+function startIntro() {
+  showScreen('setup');
+}
+
+/* ══════════════════════════════════════════
    BOOT
 ══════════════════════════════════════════ */
 loadSongs();
+runIntro();
 </script>
 </body>
 </html>
