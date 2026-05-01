@@ -7,5 +7,68 @@
       { "word": "KORTA",  "type": "cards" },
       { "word": "KERTA",  "type": "chess" }
     ]
+  },
+  {
+    "id": 2,
+    "items": [
+      { "word": "VYNAS", "type": "wine" },
+      { "word": "LYNAS", "type": "fish" },
+      { "word": "LINAS", "type": "wheat" },
+      { "word": "LITAS", "type": "coin" }
+    ]
+  },
+  {
+    "id": 3,
+    "items": [
+      { "word": "BATAS", "type": "shoe" },
+      { "word": "MATAS", "type": "scale" },
+      { "word": "RATAS", "type": "wheel" },
+      { "word": "RAGAS", "type": "bull" }
+    ]
+  },
+  {
+    "id": 4,
+    "items": [
+      { "word": "VADA", "type": "dog" },
+      { "word": "VAGA", "type": "river" },
+      { "word": "SAGA", "type": "button" },
+      { "word": "SEGE", "type": "brooch" }
+    ]
+  },
+  {
+    "id": 5,
+    "items": [
+      { "word": "LAŠAS", "type": "drop" },
+      { "word": "LABAS", "type": "hello" },
+      { "word": "LAPAS", "type": "leaf" },
+      { "word": "LOPAS", "type": "patch" }
+    ]
+  },
+  {
+    "id": 6,
+    "items": [
+      { "word": "OŠKA", "type": "sheep" },
+      { "word": "ORKA",  "type": "orca" },
+      { "word": "ARKA",  "type": "ark" },
+      { "word": "ARFA",  "type": "harp" }
+    ]
+  },
+  {
+    "id": 7,
+    "items": [
+      { "word": "DĖŽĖ", "type": "box" },
+      { "word": "DĖMĖ", "type": "stain" },
+      { "word": "DĖDĖ", "type": "uncle" },
+      { "word": "KĖDĖ", "type": "chair" }
+    ]
+  },
+  {
+    "id": 8,
+    "items": [
+      { "word": "SAGA", "type": "button" },
+      { "word": "SALA", "type": "island" },
+      { "word": "MALA", "type": "grind" },
+      { "word": "MAMA", "type": "mom" }
+    ]
   }
 ]
