@@ -467,5 +467,194 @@
     "youtubeUrl": "https://www.youtube.com/watch?v=nuTUDSQ3BBI",
     "clip": { "startSeconds": 52, "endSeconds": 64 },
     "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 64, "endSeconds": 77 }
+  },
+  {
+    "id": 68, "category": "lt",
+    "title": "Žalios metos", "artist": "Atlanta",
+    "youtubeUrl": "https://www.youtube.com/watch?v=ZH2Ygw2jPlg",
+    "clip": { "startSeconds": 55, "endSeconds": 67 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 67, "endSeconds": 80 }
+  },
+  {
+    "id": 69, "category": "lt",
+    "title": "Saulė", "artist": "Delfinai",
+    "youtubeUrl": "https://www.youtube.com/watch?v=dDeg-LOcK4w",
+    "clip": { "startSeconds": 50, "endSeconds": 62 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 62, "endSeconds": 75 }
+  },
+  {
+    "id": 70, "category": "lt",
+    "title": "Laikas", "artist": "Lukas ir Virgilijus Noreika",
+    "youtubeUrl": "https://www.youtube.com/watch?v=u0iyt5ZA2K0",
+    "clip": { "startSeconds": 53, "endSeconds": 65 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 65, "endSeconds": 78 }
+  },
+  {
+    "id": 71, "category": "lt",
+    "title": "Dainuok", "artist": "Deivis",
+    "youtubeUrl": "https://www.youtube.com/watch?v=TJLxeN-8G7E",
+    "clip": { "startSeconds": 48, "endSeconds": 60 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 60, "endSeconds": 73 }
+  },
+  {
+    "id": 72, "category": "lt",
+    "title": "Tau", "artist": "Baggy B",
+    "youtubeUrl": "https://www.youtube.com/watch?v=B-POFqYVViU",
+    "clip": { "startSeconds": 57, "endSeconds": 69 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 69, "endSeconds": 82 }
+  },
+  {
+    "id": 73, "category": "lt",
+    "title": "Pumpurėliai", "artist": "Mango",
+    "youtubeUrl": "https://www.youtube.com/watch?v=tLBsxqnCz3g",
+    "clip": { "startSeconds": 52, "endSeconds": 64 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 64, "endSeconds": 77 }
+  },
+  {
+    "id": 74, "category": "lt",
+    "title": "Pabėgai", "artist": "Vudis",
+    "youtubeUrl": "https://www.youtube.com/watch?v=ZmH_SQS8GI8",
+    "clip": { "startSeconds": 55, "endSeconds": 67 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 67, "endSeconds": 80 }
+  },
+  {
+    "id": 75, "category": "lt",
+    "title": "Robinzonas", "artist": "Vitalija Katunskytė",
+    "youtubeUrl": "https://www.youtube.com/watch?v=erDHG-QpbPY",
+    "clip": { "startSeconds": 50, "endSeconds": 62 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 62, "endSeconds": 75 }
+  },
+  {
+    "id": 76, "category": "lt",
+    "title": "Kai sirpsta vyšnios Suvalkijoj", "artist": "Vytautas Kernagis",
+    "youtubeUrl": "https://www.youtube.com/watch?v=ZgF-OUJxabU",
+    "clip": { "startSeconds": 53, "endSeconds": 65 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 65, "endSeconds": 78 }
+  },
+  {
+    "id": 77, "category": "lt",
+    "title": "Mylėk mane karštai", "artist": "Milana",
+    "youtubeUrl": "https://www.youtube.com/watch?v=vNpAmUT1gP4",
+    "clip": { "startSeconds": 47, "endSeconds": 59 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 59, "endSeconds": 72 }
+  },
+  {
+    "id": 78, "category": "lt",
+    "title": "Sombrero", "artist": "Kastaneda",
+    "youtubeUrl": "https://www.youtube.com/watch?v=3Z3_4TknCfQ",
+    "clip": { "startSeconds": 58, "endSeconds": 70 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 70, "endSeconds": 83 }
+  },
+  {
+    "id": 79, "category": "lt",
+    "title": "Myliu", "artist": "Vaidas Baumila",
+    "youtubeUrl": "https://www.youtube.com/watch?v=9OREB-VaYlM",
+    "clip": { "startSeconds": 52, "endSeconds": 64 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 64, "endSeconds": 77 }
+  },
+  {
+    "id": 80, "category": "world",
+    "title": "...Baby One More Time", "artist": "Britney Spears",
+    "youtubeUrl": "https://www.youtube.com/watch?v=C-u5WLJ9Yk4",
+    "clip": { "startSeconds": 25, "endSeconds": 37 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 37, "endSeconds": 50 }
+  },
+  {
+    "id": 81, "category": "world",
+    "title": "Work", "artist": "Rihanna ft. Drake",
+    "youtubeUrl": "https://www.youtube.com/watch?v=HL1UzIK-flA",
+    "clip": { "startSeconds": 55, "endSeconds": 67 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 67, "endSeconds": 80 }
+  },
+  {
+    "id": 82, "category": "world",
+    "title": "Dilemma", "artist": "Nelly ft. Kelly Rowland",
+    "youtubeUrl": "https://www.youtube.com/watch?v=8WYHDfJDPDc",
+    "clip": { "startSeconds": 50, "endSeconds": 62 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 62, "endSeconds": 75 }
+  },
+  {
+    "id": 83, "category": "world",
+    "title": "Lose Yourself", "artist": "Eminem",
+    "youtubeUrl": "https://www.youtube.com/watch?v=xFYQQPAOz7Y",
+    "clip": { "startSeconds": 53, "endSeconds": 65 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 65, "endSeconds": 78 }
+  },
+  {
+    "id": 84, "category": "world",
+    "title": "Whatever You Like", "artist": "T.I.",
+    "youtubeUrl": "https://www.youtube.com/watch?v=aSX6rKnPCws",
+    "clip": { "startSeconds": 48, "endSeconds": 60 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 60, "endSeconds": 73 }
+  },
+  {
+    "id": 85, "category": "world",
+    "title": "Flowers", "artist": "Miley Cyrus",
+    "youtubeUrl": "https://www.youtube.com/watch?v=G7KNmW9a75Y",
+    "clip": { "startSeconds": 55, "endSeconds": 67 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 67, "endSeconds": 80 }
+  },
+  {
+    "id": 86, "category": "world",
+    "title": "Hot", "artist": "Inna",
+    "youtubeUrl": "https://www.youtube.com/watch?v=Vh_3zdmaHbk",
+    "clip": { "startSeconds": 52, "endSeconds": 64 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 64, "endSeconds": 77 }
+  },
+  {
+    "id": 87, "category": "world",
+    "title": "Shallow", "artist": "Lady Gaga & Bradley Cooper",
+    "youtubeUrl": "https://www.youtube.com/watch?v=bo_efYhYU2A",
+    "clip": { "startSeconds": 57, "endSeconds": 69 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 69, "endSeconds": 82 }
+  },
+  {
+    "id": 88, "category": "world",
+    "title": "Don't Stop The Music", "artist": "Rihanna",
+    "youtubeUrl": "https://www.youtube.com/watch?v=yd8jh9QYfEs",
+    "clip": { "startSeconds": 50, "endSeconds": 62 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 62, "endSeconds": 75 }
+  },
+  {
+    "id": 89, "category": "world",
+    "title": "Single Ladies", "artist": "Beyoncé",
+    "youtubeUrl": "https://www.youtube.com/watch?v=4m1EFMoRFvY",
+    "clip": { "startSeconds": 25, "endSeconds": 37 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 37, "endSeconds": 50 }
+  },
+  {
+    "id": 90, "category": "world",
+    "title": "Poker Face", "artist": "Lady Gaga",
+    "youtubeUrl": "https://www.youtube.com/watch?v=oG-4Uvhm4lI",
+    "clip": { "startSeconds": 53, "endSeconds": 65 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 65, "endSeconds": 78 }
+  },
+  {
+    "id": 91, "category": "world",
+    "title": "SexyBack", "artist": "Justin Timberlake ft. Timbaland",
+    "youtubeUrl": "https://www.youtube.com/watch?v=3gOHvDP_vCs",
+    "clip": { "startSeconds": 47, "endSeconds": 59 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 59, "endSeconds": 72 }
+  },
+  {
+    "id": 92, "category": "world",
+    "title": "Right Now (Na Na Na)", "artist": "Akon",
+    "youtubeUrl": "https://www.youtube.com/watch?v=vIaH35-MLsk",
+    "clip": { "startSeconds": 55, "endSeconds": 67 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 67, "endSeconds": 80 }
+  },
+  {
+    "id": 93, "category": "world",
+    "title": "Cry Me A River", "artist": "Justin Timberlake",
+    "youtubeUrl": "https://www.youtube.com/watch?v=DksSPZTZES0",
+    "clip": { "startSeconds": 52, "endSeconds": 64 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 64, "endSeconds": 77 }
+  },
+  {
+    "id": 94, "category": "world",
+    "title": "Apologize", "artist": "Timbaland ft. OneRepublic",
+    "youtubeUrl": "https://www.youtube.com/watch?v=ZSM3w1v-A_Y",
+    "clip": { "startSeconds": 50, "endSeconds": 62 },
+    "answer": { "lyrics": "[ įrašykite teisingus žodžius ]", "startSeconds": 62, "endSeconds": 75 }
   }
 ]
