@@ -1195,6 +1195,7 @@ const G = {
   allChains:  [],
   chains:     [],
   chainIdx:   0,
+  qaPhase:    'questions',
   players:    [],
   playerIdx:  0,
   songIdx:    0,
@@ -1216,7 +1217,7 @@ const PHASES = {
   revealing:   { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
   judging:     { replay:false, reveal:false, skip:false, judge:true,  next:false, timer:false },
   scored:      { replay:false, reveal:false, skip:false, judge:false, next:true,  timer:false },
-  'qa-question':   { replay:false, reveal:true,  skip:false, judge:false, next:false, timer:true  },
+  'qa-reading':    { replay:false, reveal:false, skip:false, judge:false, next:false, timer:false },
   'chain-question':{ replay:false, reveal:true,  skip:false, judge:false, next:false, timer:false },
 };
 
@@ -1244,7 +1245,7 @@ function setPhase(p) {
     timer:         '💭 Kokie dainos žodžiai toliau?',
     revealing:     '▶ Klausyk teisingo atsakymo…',
     judging:       'Vedėjas: ar atsakymas teisingas?',
-    'qa-question': '❓ Perskaityk klausimą ir lauk atsakymų!',
+    'qa-reading':  '❓ Perskaityk klausimą garsiai!',
   };
   if (msgs[p]) setStatus(msgs[p]);
 }
@@ -1383,7 +1384,7 @@ function startGame() {
       [pool[i], pool[j]] = [pool[j], pool[i]];
     }
   }
-  if (G.mode === 'qa') { G.questions = pool; G.songs = []; }
+  if (G.mode === 'qa') { G.questions = pool; G.songs = []; G.qaPhase = 'questions'; }
   else                 { G.songs = pool; G.questions = []; }
 
   showScreen('game');
@@ -1455,27 +1456,31 @@ function loadRound() {
 }
 
 function loadQARound() {
-  // Hide songs-mode elements unconditionally first
-  el('video-wrap').style.display    = 'none';
-  el('song-reveal').style.display   = 'none';
-  el('lyrics-box').style.display    = 'none';
-  el('sb').style.display            = 'none';
-  el('chain-game').style.display    = 'none';
+  el('video-wrap').style.display     = 'none';
+  el('song-reveal').style.display    = 'none';
+  el('lyrics-box').style.display     = 'none';
+  el('sb').style.display             = 'none';
+  el('chain-game').style.display     = 'none';
   el('row-next-chain').style.display = 'none';
-  el('row-next-qa').style.display   = 'none';
-  el('question-card').style.display = 'block';
-  el('answers-grid').style.display  = 'grid';
+  el('row-next-qa').style.display    = 'none';
+  el('question-card').style.display  = 'block';
+  el('answers-grid').style.display   = 'grid';
 
   const q = G.questions[G.songIdx];
   if (!q) { setStatus('⚠️ Klaida: klausimas nerastas'); return; }
 
-  const qNum = G.songIdx + 1;
-  el('turn-label').innerHTML   = `<span class="pname">Klausimas ${qNum}</span> iš ${G.questions.length}`;
-  el('round-pill').textContent = q.tourName || '';
-  el('tour-badge').textContent = `${q.tourEmoji || '❓'} ${q.tourName} — ${qNum} / ${G.questions.length}`;
-  el('tour-badge').style.display = 'block';
-  el('q-label').textContent    = `Klausimas ${qNum}`;
-  el('q-text').textContent     = q.question;
+  const qNum  = G.songIdx + 1;
+  const total = G.questions.length;
+  const isAnswersPhase = G.qaPhase === 'answers';
+
+  el('turn-label').innerHTML = isAnswersPhase
+    ? `<span class="pname">Atsakymas ${qNum}</span> iš ${total}`
+    : `<span class="pname">Klausimas ${qNum}</span> iš ${total}`;
+  el('round-pill').textContent    = q.tourName || '';
+  el('tour-badge').textContent    = `${q.tourEmoji || '❓'} ${q.tourName} — ${qNum} / ${total}`;
+  el('tour-badge').style.display  = 'block';
+  el('q-label').textContent       = `Klausimas ${qNum}`;
+  el('q-text').textContent        = q.question;
 
   const grid = el('answers-grid');
   if (q.tourType === 'truefalse') {
@@ -1493,9 +1498,31 @@ function loadQARound() {
     ).join('');
   }
 
-  el('btn-reveal').textContent = '✅ Atskleisti atsakymą';
-  setPhase('qa-question');
-  setStatus('💭 Žaidėjai spėja atsakymą…');
+  setPhase('qa-reading');
+  el('row-next').style.display = 'none';
+
+  const nextBtn = el('btn-next-qa');
+  const isLast  = qNum >= total;
+
+  if (isAnswersPhase) {
+    // Highlight correct answer immediately
+    const count = q.tourType === 'truefalse' ? 2 : q.answers.length;
+    for (let i = 0; i < count; i++) {
+      const btn = el('ans-' + i);
+      if (btn) btn.classList.add(i === q.correct ? 'ans-correct' : 'ans-wrong');
+    }
+    const label = q.tourType === 'truefalse'
+      ? (q.correct === 0 ? 'Tiesa ✅' : 'Melas ❌')
+      : `${['A','B','C','D'][q.correct]} — ${q.answers[q.correct]}`;
+    spawnFloaters(['✨','🎉','😮','🤯'],['OMG','žinai mane!','tiksliai!','wow'], true);
+    nextBtn.textContent = isLast ? 'Baigti viktoriną ✓' : 'Kitas atsakymas →';
+    setStatus(`✅ Teisingas atsakymas: ${label}`);
+  } else {
+    nextBtn.textContent = isLast ? 'Pereiti prie atsakymų →' : 'Kitas klausimas →';
+    setStatus('❓ Perskaityk klausimą garsiai!');
+  }
+
+  el('row-next-qa').style.display = 'block';
 }
 
 function revealQAnswer() {
@@ -1632,11 +1659,21 @@ function nextRound() {
 }
 
 function nextQA() {
-  G.songIdx++;
-  if (G.songIdx >= G.questions.length) {
-    showQAFinished();
-  } else {
+  if (G.qaPhase === 'questions') {
+    if (G.songIdx >= G.questions.length - 1) {
+      G.qaPhase = 'answers';
+      G.songIdx = 0;
+    } else {
+      G.songIdx++;
+    }
     loadRound();
+  } else {
+    if (G.songIdx >= G.questions.length - 1) {
+      showQAFinished();
+    } else {
+      G.songIdx++;
+      loadRound();
+    }
   }
 }
 
